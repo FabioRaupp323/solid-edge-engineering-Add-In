@@ -1,0 +1,10 @@
+# Compiled output
+bin/
+obj/
+
+# Visual Studio personal files
+.vs/
+*.user
+
+# Sensitive configuration
+app.secrets.config

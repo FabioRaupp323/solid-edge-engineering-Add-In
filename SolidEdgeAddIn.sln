@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.2.11408.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SolidEdgeAddIn", "SolidEdgeAddIn.vbproj", "{68A78ABB-A075-4BA3-98E3-47B19535B564}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4ACA69A4-E437-401B-A4F8-9A1B1F0F48B1}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{68A78ABB-A075-4BA3-98E3-47B19535B564}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68A78ABB-A075-4BA3-98E3-47B19535B564}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68A78ABB-A075-4BA3-98E3-47B19535B564}.Debug|x64.ActiveCfg = Debug|x64
+		{68A78ABB-A075-4BA3-98E3-47B19535B564}.Debug|x64.Build.0 = Debug|x64
+		{68A78ABB-A075-4BA3-98E3-47B19535B564}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68A78ABB-A075-4BA3-98E3-47B19535B564}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68A78ABB-A075-4BA3-98E3-47B19535B564}.Release|x64.ActiveCfg = Release|x64
+		{68A78ABB-A075-4BA3-98E3-47B19535B564}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1849EB26-10F1-4E87-8520-223ED6C6CA63}
+	EndGlobalSection
+EndGlobal
