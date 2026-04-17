@@ -7,25 +7,26 @@ Module ExportDft
 		Try
 			Dim dft As DraftDocument = TryCast(app.ActiveDocument, DraftDocument)
 			Dim itemCode As String = ""
-
 			itemCode = Get3DItemCode(dft)
 
 			Dim sheetDrawing As Sheet = Nothing
-			Dim sheetPO As Sheet = Nothing
-			Dim sheetLA As Sheet = Nothing
-			Dim sheetPOLA As Sheet = Nothing
+			Dim sheetsPO As New List(Of Sheet)
+			Dim sheetsLA As New List(Of Sheet)
+			Dim sheetsPOLA As New List(Of Sheet)
 
 			For Each sheet As Sheet In dft.Sheets
-				Select Case sheet.Name.Trim()
-					Case "Desenho"
-						sheetDrawing = sheet
-					Case "PO"
-						sheetPO = sheet
-					Case "LA"
-						sheetLA = sheet
-					Case "POLA"
-						sheetPOLA = sheet
-				End Select
+				If sheet Is Nothing Then Continue For
+
+				Dim name As String = sheet.Name.Trim.ToUpper
+				If name = "DESENHO" Then
+					sheetDrawing = sheet
+				ElseIf name.EndsWith("POLA") Then
+					sheetsPOLA.Add(sheet)
+				ElseIf name.EndsWith("PO") Then
+					sheetsPO.Add(sheet)
+				ElseIf name.EndsWith("LA") Then
+					sheetsLA.Add(sheet)
+				End If
 			Next
 
 			'PDF
@@ -48,19 +49,30 @@ Module ExportDft
 			Try
 				Dim sheetsWithContent As New List(Of Sheet)
 
-				If sheetPO Is Nothing Or sheetLA Is Nothing Or sheetPOLA Is Nothing Then
-					Throw New Exception($"As folhas PO, LA e POLA não foram encontradas.")
-				Else
-					If sheetPO.DrawingViews.Count > 0 Then
-						sheetsWithContent.Add(sheetPO)
-					End If
-					If sheetLA.DrawingViews.Count > 0 Then
-						sheetsWithContent.Add(sheetLA)
-					End If
-					If sheetPOLA.DrawingViews.Count > 0 Then
-						sheetsWithContent.Add(sheetPOLA)
-					End If
+				If sheetsPO.Count = 0 AndAlso sheetsLA.Count = 0 AndAlso sheetsPOLA.Count = 0 Then
+					Throw New Exception($"Nenhuma folha do tipo PO, LA ou POLA foi encontrada.")
 				End If
+
+				'PO
+				For Each sheet In sheetsPO
+					If sheet.DrawingViews.Count > 0 Then
+						sheetsWithContent.Add(sheet)
+					End If
+				Next
+
+				'LA
+				For Each sheet In sheetsLA
+					If sheet.DrawingViews.Count > 0 Then
+						sheetsWithContent.Add(sheet)
+					End If
+				Next
+
+				'POLA
+				For Each sheet In sheetsPOLA
+					If sheet.DrawingViews.Count > 0 Then
+						sheetsWithContent.Add(sheet)
+					End If
+				Next
 
 				If sheetsWithContent.Count < 1 Then
 					Throw New Exception("Nenhuma das folhas PO, LA e POLA possuem vistas.")

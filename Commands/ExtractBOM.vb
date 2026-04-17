@@ -76,7 +76,11 @@ Module ExtractBOM
                 item.CreatorDFT = ReadDftAuthor(item.PathDFT)
                 item.PathPDF = GetPdfPath(item.ItemCode, item.Category)
 
-                items.Add(key, item)
+                If item.Category = "CJ.EXPLODIDO" Then
+                    path3D = parentFile
+                Else
+                    items.Add(key, item)
+                End If
 
                 If occ.Subassembly Then
                     Dim subAsm = TryCast(occ.OccurrenceDocument, AssemblyDocument)
