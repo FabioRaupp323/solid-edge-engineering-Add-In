@@ -76,7 +76,7 @@ Public Class Connect
                     Dim ids = {1001}
 
                     _addin.SetAddInInfo(
-                            Marshal.GetHINSTANCE(Me.GetType().Module).ToInt32(),
+                            Marshal.GetHINSTANCE(Me.GetType().Module).ToInt64(),
                             EnvCatID,
                             "Análise de BOM",
                             0, 0, 0, 0,
@@ -97,7 +97,7 @@ Public Class Connect
                     Dim ids = {2001}
 
                     _addin.SetAddInInfo(
-                    Marshal.GetHINSTANCE(Me.GetType().Module).ToInt32(),
+                    Marshal.GetHINSTANCE(Me.GetType().Module).ToInt64,
                     EnvCatID,
                     "Exportar DFT",
                     0, 0, 0, 0,
@@ -119,7 +119,7 @@ Public Class Connect
                     Dim ids = {3001, 3002}
 
                     _addin.SetAddInInfo(
-                    Marshal.GetHINSTANCE(Me.GetType().Module).ToInt32(),
+                    Marshal.GetHINSTANCE(Me.GetType().Module).ToInt64(),
                     EnvCatID,
                     "Exportar 3D",
                     0, 0, 0, 0,
@@ -141,7 +141,7 @@ Public Class Connect
 
             End Select
         Catch ex As Exception
-            MsgBox("Erro: " & ex.Message)
+            MsgBox("Erro: " & ex.ToString)
         End Try
     End Sub
 
