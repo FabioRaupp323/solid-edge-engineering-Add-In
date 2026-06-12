@@ -61,7 +61,7 @@ Module BomRepository
                             .PathParent = reader("PathParent").ToString(),
                             .PathDFT = reader("PathDFT").ToString(),
                             .LastAuthor3D = reader("LastAuthor3D").ToString(),
-                            .Revision = If(reader("Revision").ToString() Is DBNull.Value, Nothing, reader("Revision").ToString())
+                            .Revision = If(reader("Revision") Is DBNull.Value, Nothing, reader("Revision").ToString())
                         }
                         oldItems.Add(item.PathParent & "|" & item.Path3D, item)
                     End While

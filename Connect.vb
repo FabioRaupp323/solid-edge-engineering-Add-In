@@ -13,8 +13,9 @@ Public Class Connect
     Implements ISEAddInEvents
 
     Private _app As SolidEdgeFramework.Application
-    Private _addin As AddIn
+    Private _addinEx As ISEAddInEx
     Private _sinkCookie As Integer
+    Private _addinFileName
 
     Public Sub OnConnection(Application As Object,
                             ConnectMode As SeConnectMode,
@@ -22,15 +23,14 @@ Public Class Connect
                             Implements ISolidEdgeAddIn.OnConnection
 
         ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
-
         AddHandler AppDomain.CurrentDomain.AssemblyResolve, AddressOf CurrentDomain_AssemblyResolve
 
         _app = CType(Application, SolidEdgeFramework.Application)
-        _addin = AddInInstance
+        _addinEx = AddInInstance
+        _addinEx.GuiVersion = 9
+        _addinFileName = Me.GetType().Module.FullyQualifiedName
 
-        _addin.GuiVersion = 5
-
-        Dim cpc = DirectCast(_addin, IConnectionPointContainer)
+        Dim cpc = DirectCast(_addinEx, IConnectionPointContainer)
         Dim cp As IConnectionPoint = Nothing
         Dim guid = GetType(ISEAddInEvents).GUID
 
@@ -67,7 +67,6 @@ Public Class Connect
                                       pEnvironmentDispatch As Object,
                                       bFirstTime As Boolean) _
                                       Implements ISolidEdgeAddIn.OnConnectToEnvironment
-
         Try
             Select Case EnvCatID
                 Case "{26618395-09D6-11D1-BA07-080036230602}"
@@ -75,8 +74,8 @@ Public Class Connect
                     Dim names = {"ExportarBOM" & vbLf & "ExportarBOM" & vbLf & "Exporta a lista de componentes da montagem" & vbLf & "ExportarBOM"}
                     Dim ids = {1001}
 
-                    _addin.SetAddInInfo(
-                            Marshal.GetHINSTANCE(Me.GetType().Module).ToInt64(),
+                    _addinEx.SetAddInInfoEx(
+                            _addinFileName,
                             EnvCatID,
                             "Análise de BOM",
                             0, 0, 0, 0,
@@ -86,28 +85,27 @@ Public Class Connect
                         )
 
                     If bFirstTime Then
-                        Dim btn = _addin.AddCommandBarButton(EnvCatID, "Análise de BOM", 1001)
+                        Dim btn = _addinEx.AddCommandBarButton(EnvCatID, "Análise de BOM", 1001)
                         btn.Style = SeButtonStyle.seButtonIconAndCaptionBelow
                         btn.LoadFace(AppSettings.IconBomPath)
                     End If
 
                 Case "{08244193-B78D-11D2-9216-00C04F79BE98}"
-
                     Dim names = {"Exportar PDF e DXF" & vbLf & "Exportar PDF e DXF" & vbLf & "Exporta a aba Desenho do draft aberto como PDF e as abas LA/PO/POLA (dependendo de onde há conteúdo) como DXF." & vbLf & "Exportar PDF e DXF"}
                     Dim ids = {2001}
 
-                    _addin.SetAddInInfo(
-                    Marshal.GetHINSTANCE(Me.GetType().Module).ToInt64,
-                    EnvCatID,
-                    "Exportar DFT",
-                    0, 0, 0, 0,
-                    1,
-                    names,
-                    ids
-                    )
+                    _addinEx.SetAddInInfoEx(
+                            _addinFileName,
+                            EnvCatID,
+                            "Exportar DFT",
+                            0, 0, 0, 0,
+                            1,
+                            names,
+                            ids
+                        )
 
                     If bFirstTime Then
-                        Dim btnPDF = _addin.AddCommandBarButton(EnvCatID, "Exportar DFT", 2001)
+                        Dim btnPDF = _addinEx.AddCommandBarButton(EnvCatID, "Exportar DFT", 2001)
                         btnPDF.Style = SeButtonStyle.seButtonIconAndCaptionBelow
                         btnPDF.LoadFace(AppSettings.IconDftPath)
                     End If
@@ -118,23 +116,23 @@ Public Class Connect
                                  "Exportar IGS" & vbLf & "Exportar IGS" & vbLf & "Exporta o arquivo 3D no formato IGS." & vbLf & "Exportar IGS"}
                     Dim ids = {3001, 3002}
 
-                    _addin.SetAddInInfo(
-                    Marshal.GetHINSTANCE(Me.GetType().Module).ToInt64(),
-                    EnvCatID,
-                    "Exportar 3D",
-                    0, 0, 0, 0,
-                    2,
-                    names,
-                    ids
-                    )
+                    _addinEx.SetAddInInfoEx(
+                            _addinFileName,
+                            EnvCatID,
+                            "Exportar 3D",
+                            0, 0, 0, 0,
+                            2,
+                            names,
+                            ids
+                        )
 
                     If bFirstTime Then
 
-                        Dim btnStep = _addin.AddCommandBarButton(EnvCatID, "Exportar 3D", 3001)
+                        Dim btnStep = _addinEx.AddCommandBarButton(EnvCatID, "Exportar 3D", 3001)
                         btnStep.Style = SeButtonStyle.seButtonIconAndCaptionBelow
                         btnStep.LoadFace(AppSettings.IconStepPath)
 
-                        Dim btnIgs = _addin.AddCommandBarButton(EnvCatID, "Exportar 3D", 3002)
+                        Dim btnIgs = _addinEx.AddCommandBarButton(EnvCatID, "Exportar 3D", 3002)
                         btnIgs.Style = SeButtonStyle.seButtonIconAndCaptionBelow
                         btnIgs.LoadFace(AppSettings.IconIgsPath)
                     End If
