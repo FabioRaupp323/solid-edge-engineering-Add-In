@@ -111,6 +111,12 @@
     <Compile Include="AddInRegistry\Connect.vb" />
     <Compile Include="AddInRegistry\CommandRegistry.vb" />
     <Compile Include="Commands\RegisterProduct.vb" />
+    <Compile Include="Forms\RegisterProductForm.Designer.vb">
+      <DependentUpon>RegisterProductForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\RegisterProductForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Models\BomItem.vb" />
     <Compile Include="Models\ErpProduct.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
@@ -133,6 +139,9 @@
     <Compile Include="Services\SolidEdgePropertyReader.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\RegisterProductForm.resx">
+      <DependentUpon>RegisterProductForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>

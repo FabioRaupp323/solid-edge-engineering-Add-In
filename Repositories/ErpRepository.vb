@@ -1,4 +1,5 @@
 ﻿Imports System.Data.SqlClient
+Imports System.Threading
 
 Public Class ErpRepository
 	Private _connectionString As String
@@ -7,10 +8,10 @@ Public Class ErpRepository
 		_connectionString = connectionString
 	End Sub
 
-	Public Function SearchProduct(text As String) As List(Of ErpProduct)
+	Public Async Function SearchProduct(text As String, token As CancellationToken) As Task(Of List(Of ErpProduct))
 		Dim fetched As New List(Of ErpProduct)
 		Using conn As New SqlConnection(_connectionString)
-			conn.Open()
+			Await conn.OpenAsync(token)
 
 			Dim cmd As New SqlCommand("
 				SELECT proID, proCodigo, proDescricao, proReferencia FROM Produto 
@@ -20,8 +21,8 @@ Public Class ErpRepository
 
 			cmd.Parameters.AddWithValue("@text", "%" & text & "%")
 
-			Using reader As SqlDataReader = cmd.ExecuteReader()
-				While reader.Read
+			Using reader As SqlDataReader = Await cmd.ExecuteReaderAsync(token)
+				While Await reader.ReadAsync(token)
 					Dim product As New ErpProduct With {
 						.Id = Convert.ToInt32(reader("proID")),
 						.ItemCode = reader("proCodigo").ToString,
