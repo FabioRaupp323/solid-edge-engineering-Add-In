@@ -1,0 +1,8 @@
+﻿Module SolidEdgeCATIDs
+
+	Public Const CATID_SEPart As String = "{26618396-09D6-11D1-BA07-080036230602}"
+	Public Const CATID_SESheetMetal As String = "{26618398-09D6-11D1-BA07-080036230602}"
+	Public Const CATID_SEAssembly As String = "{26618395-09D6-11D1-BA07-080036230602}"
+	Public Const CATID_SEDraft As String = "{08244193-B78D-11D2-9216-00C04F79BE98}"
+
+End Module

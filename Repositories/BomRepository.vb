@@ -1,10 +1,15 @@
 ﻿Imports System.Collections.Specialized
 Imports System.Data.SqlClient
 
-Module BomRepository
+Public Class BomRepository
+    Private _connectionString As String
+
+    Public Sub New(connectionString As String)
+        _connectionString = connectionString
+    End Sub
 
     Public Function GetVersion(numeroSerie As String) As Integer
-        Using conn As New SqlConnection(AppSettings.ConnectionString)
+        Using conn As New SqlConnection(_connectionString)
             conn.Open()
 
             Dim cmd As New SqlCommand("
@@ -27,7 +32,7 @@ Module BomRepository
         Dim oldItems As New Dictionary(Of String, BomItem)
         Dim versionId As Integer
 
-        Using conn As New SqlConnection(AppSettings.ConnectionString)
+        Using conn As New SqlConnection(_connectionString)
             conn.Open()
 
             Using cmd As New SqlCommand("
@@ -74,7 +79,7 @@ Module BomRepository
 
     Public Sub SaveToDB(serial As String, version As Integer, items As OrderedDictionary, title As String, customer As String)
 
-        Using conn As New SqlConnection(AppSettings.ConnectionString)
+        Using conn As New SqlConnection(_connectionString)
             conn.Open()
 
             Using trans = conn.BeginTransaction()
@@ -146,4 +151,4 @@ Module BomRepository
         End Using
     End Sub
 
-End Module
+End Class

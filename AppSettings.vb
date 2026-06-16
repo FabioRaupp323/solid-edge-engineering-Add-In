@@ -26,9 +26,15 @@ Module AppSettings
         Next
     End Sub
 
-    Public ReadOnly Property ConnectionString As String
+    Public ReadOnly Property BomConnectionString As String
         Get
-            Return GetRequired("ConnectionString")
+            Return GetRequired("BomConnectionString")
+        End Get
+    End Property
+
+    Public ReadOnly Property ErpConnectionString As String
+        Get
+            Return GetRequired("ErpConnectionString")
         End Get
     End Property
 
@@ -65,6 +71,12 @@ Module AppSettings
     Public ReadOnly Property IconIgsPath As String
         Get
             Return GetRequired("IconIgsPath")
+        End Get
+    End Property
+
+    Public ReadOnly Property IconCadastrarProdutoPath As String
+        Get
+            Return GetRequired("IconCadastrarProdutoPath")
         End Get
     End Property
 

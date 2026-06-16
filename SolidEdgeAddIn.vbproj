@@ -103,12 +103,16 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddInRegistry\SolidEdgeCATIDs.vb" />
     <Compile Include="AppSettings.vb" />
     <Compile Include="Commands\Export3D.vb" />
     <Compile Include="Commands\ExportDft.vb" />
     <Compile Include="Commands\ExtractBOM.vb" />
-    <Compile Include="Connect.vb" />
+    <Compile Include="AddInRegistry\Connect.vb" />
+    <Compile Include="AddInRegistry\CommandRegistry.vb" />
+    <Compile Include="Commands\RegisterProduct.vb" />
     <Compile Include="Models\BomItem.vb" />
+    <Compile Include="Models\ErpProduct.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -125,6 +129,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Repositories\BomRepository.vb" />
+    <Compile Include="Repositories\ErpRepository.vb" />
     <Compile Include="Services\SolidEdgePropertyReader.vb" />
   </ItemGroup>
   <ItemGroup>

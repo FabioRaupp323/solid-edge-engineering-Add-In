@@ -73,7 +73,8 @@ Create `app.secrets.config` in the project root with the following structure:
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
 <appSettings>
-    <add key="ConnectionString"   value="Server=YOUR_SERVER;Database=YOUR_DB;Trusted_Connection=True;"/>
+    <add key="BomConnectionString"   value="Server=YOUR_SERVER;Database=YOUR_DB;Trusted_Connection=True;"/>
+    <add key="ErpConnectionString"   value="Server=ERP_SERVER;Database=ERP_DB;User Id=ERP_USER;Password=ERP_PASSWORD;Trusted_Connection=True;"/>
     <add key="PdfDxfOutputPath"   value="\\your-server\shared-folder\"/>
     <add key="StepIgsOutputPath"  value="\\your-server\shared-folder\"/>
     <add key="IconBomPath"        value="\\your-server\path\to\iconBOM32.bmp"/>

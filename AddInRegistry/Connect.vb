@@ -4,6 +4,7 @@ Imports System.Runtime.InteropServices
 Imports System.Runtime.InteropServices.ComTypes
 Imports SolidEdgeFramework
 Imports System.Net
+Imports System.Threading
 
 <ComVisible(True)>
 <Guid("A1B2C3D4-E5F6-47D1-98A1-B23456789ABC")>
@@ -15,7 +16,7 @@ Public Class Connect
     Private _app As SolidEdgeFramework.Application
     Private _addinEx As ISEAddInEx
     Private _sinkCookie As Integer
-    Private _addinFileName
+    Private _addinFileName As String
 
     Public Sub OnConnection(Application As Object,
                             ConnectMode As SeConnectMode,
@@ -27,7 +28,7 @@ Public Class Connect
 
         _app = CType(Application, SolidEdgeFramework.Application)
         _addinEx = AddInInstance
-        _addinEx.GuiVersion = 9
+        _addinEx.GuiVersion = 1
         _addinFileName = Me.GetType().Module.FullyQualifiedName
 
         Dim cpc = DirectCast(_addinEx, IConnectionPointContainer)
@@ -60,7 +61,9 @@ Public Class Connect
 
         Catch ex As Exception
         End Try
+
         Return Nothing
+
     End Function
 
     Public Sub OnConnectToEnvironment(EnvCatID As String,
@@ -68,74 +71,23 @@ Public Class Connect
                                       bFirstTime As Boolean) _
                                       Implements ISolidEdgeAddIn.OnConnectToEnvironment
         Try
+            Dim reg As New CommandRegistry(_addinEx, _addinFileName)
+
             Select Case EnvCatID
-                Case "{26618395-09D6-11D1-BA07-080036230602}"
+                Case CATID_SEAssembly
+                    reg.RegisterBOMGroup(EnvCatID, bFirstTime)
+                    reg.RegisterCadastrarProdutoGroup(EnvCatID, bFirstTime)
 
-                    Dim names = {"ExportarBOM" & vbLf & "ExportarBOM" & vbLf & "Exporta a lista de componentes da montagem" & vbLf & "ExportarBOM"}
-                    Dim ids = {1001}
+                Case CATID_SEDraft
+                    reg.RegisterExportDFTGroup(EnvCatID, bFirstTime)
 
-                    _addinEx.SetAddInInfoEx(
-                            _addinFileName,
-                            EnvCatID,
-                            "Análise de BOM",
-                            0, 0, 0, 0,
-                            1,
-                            names,
-                            ids
-                        )
+                Case CATID_SEPart
+                    reg.RegisterExport3DGroup(EnvCatID, bFirstTime)
+                    reg.RegisterCadastrarProdutoGroup(EnvCatID, bFirstTime)
 
-                    If bFirstTime Then
-                        Dim btn = _addinEx.AddCommandBarButton(EnvCatID, "Análise de BOM", 1001)
-                        btn.Style = SeButtonStyle.seButtonIconAndCaptionBelow
-                        btn.LoadFace(AppSettings.IconBomPath)
-                    End If
-
-                Case "{08244193-B78D-11D2-9216-00C04F79BE98}"
-                    Dim names = {"Exportar PDF e DXF" & vbLf & "Exportar PDF e DXF" & vbLf & "Exporta a aba Desenho do draft aberto como PDF e as abas LA/PO/POLA (dependendo de onde há conteúdo) como DXF." & vbLf & "Exportar PDF e DXF"}
-                    Dim ids = {2001}
-
-                    _addinEx.SetAddInInfoEx(
-                            _addinFileName,
-                            EnvCatID,
-                            "Exportar DFT",
-                            0, 0, 0, 0,
-                            1,
-                            names,
-                            ids
-                        )
-
-                    If bFirstTime Then
-                        Dim btnPDF = _addinEx.AddCommandBarButton(EnvCatID, "Exportar DFT", 2001)
-                        btnPDF.Style = SeButtonStyle.seButtonIconAndCaptionBelow
-                        btnPDF.LoadFace(AppSettings.IconDftPath)
-                    End If
-
-                Case "{26618396-09D6-11D1-BA07-080036230602}", "{26618398-09D6-11D1-BA07-080036230602}"
-
-                    Dim names = {"Exportar STEP" & vbLf & "Exportar STEP" & vbLf & "Exporta o arquivo 3D no formato STEP." & vbLf & "Exportar STEP",
-                                 "Exportar IGS" & vbLf & "Exportar IGS" & vbLf & "Exporta o arquivo 3D no formato IGS." & vbLf & "Exportar IGS"}
-                    Dim ids = {3001, 3002}
-
-                    _addinEx.SetAddInInfoEx(
-                            _addinFileName,
-                            EnvCatID,
-                            "Exportar 3D",
-                            0, 0, 0, 0,
-                            2,
-                            names,
-                            ids
-                        )
-
-                    If bFirstTime Then
-
-                        Dim btnStep = _addinEx.AddCommandBarButton(EnvCatID, "Exportar 3D", 3001)
-                        btnStep.Style = SeButtonStyle.seButtonIconAndCaptionBelow
-                        btnStep.LoadFace(AppSettings.IconStepPath)
-
-                        Dim btnIgs = _addinEx.AddCommandBarButton(EnvCatID, "Exportar 3D", 3002)
-                        btnIgs.Style = SeButtonStyle.seButtonIconAndCaptionBelow
-                        btnIgs.LoadFace(AppSettings.IconIgsPath)
-                    End If
+                Case CATID_SESheetMetal
+                    reg.RegisterExport3DGroup(EnvCatID, bFirstTime)
+                    reg.RegisterCadastrarProdutoGroup(EnvCatID, bFirstTime)
 
             End Select
         Catch ex As Exception
@@ -158,6 +110,9 @@ Public Class Connect
 
             Case 3002
                 Export3D.Export3D(_app, ".igs")
+
+            Case 4001
+                RegisterProduct.RegisterProduct(_app)
 
         End Select
     End Sub

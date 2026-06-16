@@ -24,9 +24,10 @@ Module ExtractBOM
 
             Dim serial = GetPropValue(asm.Properties("ProjectInformation"), "Document Number")
 
-            Dim version = GetVersion(serial)
+            Dim BOMrepository As New BomRepository(AppSettings.BomConnectionString)
+            Dim version = BOMrepository.GetVersion(serial)
             If version > 1 Then
-                Dim equal As Boolean = CompareWithLastVersion(items, version - 1, serial)
+                Dim equal As Boolean = CompareWithLastVersion(BOMrepository, items, version - 1, serial)
                 If equal Then
                     Throw New Exception("Nenhuma alteração detectada em relação à última versão.")
                 End If
@@ -34,7 +35,7 @@ Module ExtractBOM
 
             Dim customer = GetPropValue(asm.Properties("DocumentSummaryInformation"), "Company")
 
-            SaveToDB(serial, version, items, asm.Name, customer)
+            BOMrepository.SaveToDB(serial, version, items, asm.Name, customer)
 
             MsgBox("BOM salva no banco de dados com sucesso!")
         Catch ex As Exception
@@ -93,9 +94,9 @@ Module ExtractBOM
         Next
     End Sub
 
-    Private Function CompareWithLastVersion(items As OrderedDictionary, version As Integer, serial As String) As Boolean
+    Private Function CompareWithLastVersion(BOMrepository As BomRepository, items As OrderedDictionary, version As Integer, serial As String) As Boolean
 
-        Dim oldItems As Dictionary(Of String, BomItem) = ReadLastVersion(version, serial)
+        Dim oldItems As Dictionary(Of String, BomItem) = BOMrepository.ReadLastVersion(version, serial)
 
         If items.Count <> oldItems.Count Then Return False
 
