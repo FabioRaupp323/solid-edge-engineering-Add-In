@@ -1,16 +1,42 @@
-﻿Module RegisterProduct
+﻿Imports System.Windows.Forms
+Imports SolidEdgeFramework
+
+Module RegisterProduct
 
 	Public Sub RegisterProduct(app As SolidEdgeFramework.Application)
-		Dim erpRepository As New ErpRepository(AppSettings.ErpConnectionString)
+		Try
+			Dim currentProduct As ErpProduct = GetCurrentProduct(app)
 
-		Dim registerProductForm As New RegisterProductForm(erpRepository)
-		registerProductForm.ShowDialog()
+			Dim erpRepository As New ErpRepository(AppSettings.ErpConnectionString)
 
-		If registerProductForm.DialogResult = System.Windows.Forms.DialogResult.Cancel Then
-			Exit Sub
-		End If
+			Dim registerProductForm As New RegisterProductForm(erpRepository, currentProduct)
+			registerProductForm.ShowDialog()
 
-		Dim baseProduct As ErpProduct = registerProductForm.SelectedBaseProduct
+			If registerProductForm.DialogResult = System.Windows.Forms.DialogResult.Cancel Then
+				Exit Sub
+			End If
+
+			Dim baseProduct As ErpProduct = registerProductForm.SelectedBaseProduct
+
+		Catch ex As Exception
+			MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error)
+		End Try
 
 	End Sub
+
+	Private Function GetCurrentProduct(app As SolidEdgeFramework.Application) As ErpProduct
+		Try
+			Dim doc = TryCast(app.ActiveDocument, SolidEdgeDocument)
+			Dim product As New ErpProduct
+
+			Dim SI = GetPropSet("SummaryInformation", doc)
+			product.ItemCode = GetPropValue(SI, "Keywords")
+			product.Description = GetPropValue(SI, "Title")
+			product.Reference = GetPropValue(SI, "Comments")
+
+			Return product
+		Catch ex As Exception
+			Throw New Exception("Erro ao ler propriedades do documento: " & ex.Message)
+		End Try
+	End Function
 End Module

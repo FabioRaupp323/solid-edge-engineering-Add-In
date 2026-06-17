@@ -5,6 +5,7 @@ Public Class RegisterProductForm
 	Private _erpRepository As ErpRepository
 	Private _timer As Windows.Forms.Timer
 	Private _cancellationToken As CancellationTokenSource
+	Private _currentProduct As ErpProduct
 
 	Private _selectedBaseProduct As ErpProduct
 	Public ReadOnly Property SelectedBaseProduct As ErpProduct
@@ -13,10 +14,13 @@ Public Class RegisterProductForm
 		End Get
 	End Property
 
-	Public Sub New(erpRepository As ErpRepository)
+	Public Sub New(erpRepository As ErpRepository, currentProduct As ErpProduct)
 		InitializeComponent()
 
 		_erpRepository = erpRepository
+		_currentProduct = currentProduct
+		SetDefaultTexts()
+
 		_cancellationToken = New CancellationTokenSource
 		_timer = New Windows.Forms.Timer
 		_timer.Interval = 500
@@ -82,7 +86,17 @@ Public Class RegisterProductForm
 			End If
 		End If
 
+		_currentProduct.Description = txtDescription.Text.Trim
+		_currentProduct.Reference = txtReference.Text.Trim
+
 		_selectedBaseProduct = cmbBaseProduct.SelectedItem
 		Me.DialogResult = DialogResult.OK
+	End Sub
+
+	Private Sub SetDefaultTexts()
+		txtItemCode.Text = _currentProduct.ItemCode
+		txtDescription.Text = _currentProduct.Description
+		txtReference.Text = _currentProduct.Reference
+
 	End Sub
 End Class
