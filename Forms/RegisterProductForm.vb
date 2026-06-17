@@ -1,9 +1,17 @@
 ﻿Imports System.Threading
+Imports System.Windows.Forms
 
 Public Class RegisterProductForm
 	Private _erpRepository As ErpRepository
 	Private _timer As Windows.Forms.Timer
 	Private _cancellationToken As CancellationTokenSource
+
+	Private _selectedBaseProduct As ErpProduct
+	Public ReadOnly Property SelectedBaseProduct As ErpProduct
+		Get
+			Return _selectedBaseProduct
+		End Get
+	End Property
 
 	Public Sub New(erpRepository As ErpRepository)
 		InitializeComponent()
@@ -49,5 +57,32 @@ Public Class RegisterProductForm
 		Finally
 			lblLoading.Visible = False
 		End Try
+	End Sub
+
+	Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
+		Me.DialogResult = DialogResult.Cancel
+	End Sub
+
+	Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
+
+		If String.IsNullOrWhiteSpace(txtDescription.Text) Then
+			MessageBox.Show("O campo 'Descrição' não pode ser vazio", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+			Exit Sub
+
+		ElseIf String.IsNullOrWhiteSpace(txtReference.Text) Then
+			MessageBox.Show("O campo 'Referência' não pode ser vazio", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+			Exit Sub
+		End If
+
+		If String.IsNullOrWhiteSpace(txtItemCode.Text) Then
+			If cmbBaseProduct.SelectedItem Is Nothing Then
+				MessageBox.Show("Selecione um produto base para o cadastro.", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+				Exit Sub
+
+			End If
+		End If
+
+		_selectedBaseProduct = cmbBaseProduct.SelectedItem
+		Me.DialogResult = DialogResult.OK
 	End Sub
 End Class
