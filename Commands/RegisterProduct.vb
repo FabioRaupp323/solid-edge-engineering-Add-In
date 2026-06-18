@@ -3,7 +3,7 @@ Imports SolidEdgeFramework
 
 Module RegisterProduct
 
-	Public Sub RegisterProduct(app As SolidEdgeFramework.Application)
+	Public Async Sub RegisterProduct(app As SolidEdgeFramework.Application)
 		Try
 			Dim currentProduct As ErpProduct = GetCurrentProduct(app)
 
@@ -17,6 +17,14 @@ Module RegisterProduct
 			End If
 
 			Dim baseProduct As ErpProduct = registerProductForm.SelectedBaseProduct
+
+			If String.IsNullOrWhiteSpace(currentProduct.ItemCode) Then
+				'currentProduct.ItemCode = Await erpRepository.DuplicateProduct(currentProduct, baseProduct)
+
+			Else
+				Await erpRepository.UpdateProduct(currentProduct)
+
+			End If
 
 		Catch ex As Exception
 			MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error)

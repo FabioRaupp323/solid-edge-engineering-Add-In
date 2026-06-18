@@ -86,7 +86,7 @@ Public Class RegisterProductForm
 			End If
 		Else
 			If Not Await _erpRepository.ProductExists(txtItemCode.Text) Then
-				MessageBox.Show("O produto com código " & txtItemCode.Text & " não existe. Selecione um produto base para criar um novo cadastro.", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+				MessageBox.Show("Nenhum produto encontrado com o código " & txtItemCode.Text & ". Selecione um produto base para criar um novo cadastro.", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
 				txtItemCode.Text = ""
 				Exit Sub
 

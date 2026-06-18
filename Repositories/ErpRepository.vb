@@ -54,8 +54,25 @@ Public Class ErpRepository
 	End Function
 
 	Public Async Function UpdateProduct(product As ErpProduct) As Task
+		Using conn As New SqlConnection(_connectionString)
+			Await conn.OpenAsync()
 
-	End Function
+			Dim cmd As New SqlCommand("
+					UPDATE Produto 
+					SET proDescricao = @description, proReferencia = @reference
+					WHERE proCodigo = @itemCode", conn)
+
+			cmd.Parameters.AddWithValue("@itemCode", product.ItemCode)
+			cmd.Parameters.AddWithValue("@description", product.Description)
+			cmd.Parameters.AddWithValue("@reference", product.Reference)
+
+			Dim rowsAffected As Integer = Await cmd.ExecuteNonQueryAsync()
+
+			If rowsAffected = 0 Then
+				Throw New Exception($"Nenhum produto encontrado com o código {product.ItemCode}.")
+			End If
+		End Using
+    End Function
 
 	Public Async Function DuplicateProduct(currentProduct As ErpProduct, baseProduct As ErpProduct) As Task(Of String)
 
