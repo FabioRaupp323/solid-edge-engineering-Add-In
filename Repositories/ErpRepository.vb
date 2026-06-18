@@ -36,4 +36,29 @@ Public Class ErpRepository
 
 		Return fetched
 	End Function
+
+	Public Async Function ProductExists(itemCode As String) As Task(Of Boolean)
+		Using conn As New SqlConnection(_connectionString)
+			Await conn.OpenAsync()
+
+			Dim cmd As New SqlCommand("
+				SELECT 1 FROM Produto
+				WHERE proCodigo = @itemCode", conn)
+
+			cmd.Parameters.AddWithValue("@itemCode", itemCode)
+
+			Dim exist As Boolean = If(Await cmd.ExecuteScalarAsync Is Nothing, False, True)
+
+			Return exist
+		End Using
+	End Function
+
+	Public Async Function UpdateProduct(product As ErpProduct) As Task
+
+	End Function
+
+	Public Async Function DuplicateProduct(currentProduct As ErpProduct, baseProduct As ErpProduct) As Task(Of String)
+
+	End Function
+
 End Class

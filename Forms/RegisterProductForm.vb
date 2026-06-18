@@ -67,7 +67,7 @@ Public Class RegisterProductForm
 		Me.DialogResult = DialogResult.Cancel
 	End Sub
 
-	Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
+	Private Async Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
 
 		If String.IsNullOrWhiteSpace(txtDescription.Text) Then
 			MessageBox.Show("O campo 'Descrição' não pode ser vazio", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -84,10 +84,18 @@ Public Class RegisterProductForm
 				Exit Sub
 
 			End If
+		Else
+			If Not Await _erpRepository.ProductExists(txtItemCode.Text) Then
+				MessageBox.Show("O produto com código " & txtItemCode.Text & " não existe. Selecione um produto base para criar um novo cadastro.", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+				txtItemCode.Text = ""
+				Exit Sub
+
+			End If
 		End If
 
 		_currentProduct.Description = txtDescription.Text.Trim
 		_currentProduct.Reference = txtReference.Text.Trim
+		_currentProduct.ItemCode = txtItemCode.Text.Trim
 
 		_selectedBaseProduct = cmbBaseProduct.SelectedItem
 		Me.DialogResult = DialogResult.OK
