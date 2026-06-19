@@ -19,11 +19,13 @@ Module RegisterProduct
 			Dim baseProduct As ErpProduct = registerProductForm.SelectedBaseProduct
 
 			If String.IsNullOrWhiteSpace(currentProduct.ItemCode) Then
-				'currentProduct.ItemCode = Await erpRepository.DuplicateProduct(currentProduct, baseProduct)
+				currentProduct.ItemCode = Await erpRepository.DuplicateProduct(currentProduct, baseProduct)
+				'UpdateSEDocumentProperties(app, currentProduct)
 
+				MessageBox.Show("Produto cadastrado com sucesso. Código: " & currentProduct.ItemCode, "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information)
 			Else
 				Await erpRepository.UpdateProduct(currentProduct)
-
+				MessageBox.Show("As informações de Descrição e Referência do produto foram atualizadas com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information)
 			End If
 
 		Catch ex As Exception

@@ -75,7 +75,53 @@ Public Class ErpRepository
     End Function
 
 	Public Async Function DuplicateProduct(currentProduct As ErpProduct, baseProduct As ErpProduct) As Task(Of String)
+		Using conn As New SqlConnection(_connectionString)
+			Await conn.OpenAsync()
 
-	End Function
+			Using trans = conn.BeginTransaction()
+				Try
+					Dim cmdReadLastCode As New SqlCommand("
+						SELECT conValor FROM Config
+						WHERE conID = 'Produto'
+						WITH (UPDLOCK, HOLDLOCK)", conn, trans)
+
+					Dim lastCode As Integer = Convert.ToInt32(Await cmdReadLastCode.ExecuteScalarAsync())
+
+					Dim nextCode As Integer = lastCode + 1
+
+					Dim cmdUpdateLastCode As New SqlCommand("
+						UPDATE Config
+						SET conValor = @nextCode
+						WHERE conID = 'Produto'", conn, trans)
+
+					cmdUpdateLastCode.Parameters.AddWithValue("@nextCode", nextCode)
+
+					Await cmdUpdateLastCode.ExecuteNonQueryAsync()
+
+					Dim nextCodeFormated As String = nextCode.ToString("000000")
+
+					Dim cmdDuplicateProduct As New SqlCommand($"
+						INSERT INTO Produto (proCodigo, proDescricao, proReferencia, {AppSettings.ErpDuplicatedColumns})
+						SELECT @nextCodeFormated, @currentDescription, @currentReference, {AppSettings.ErpDuplicatedColumns}
+						FROM Produto
+						WHERE proCodigo = @baseCode", conn, trans)
+
+					cmdDuplicateProduct.Parameters.AddWithValue("@nextCodeFormated", nextCodeFormated)
+					cmdDuplicateProduct.Parameters.AddWithValue("@currentDescription", currentProduct.Description)
+					cmdDuplicateProduct.Parameters.AddWithValue("@currentReference", currentProduct.Reference)
+					cmdDuplicateProduct.Parameters.AddWithValue("@baseCode", baseProduct.ItemCode)
+
+					Await cmdDuplicateProduct.ExecuteNonQueryAsync()
+
+					trans.Commit()
+
+					Return nextCodeFormated
+				Catch ex As Exception
+					trans.Rollback()
+					Throw New Exception("Erro ao cadastrar produto no banco de dados do erp: " & ex.Message)
+				End Try
+			End Using
+		End Using
+    End Function
 
 End Class

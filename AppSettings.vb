@@ -80,6 +80,12 @@ Module AppSettings
         End Get
     End Property
 
+    Public ReadOnly Property ErpDuplicatedColumns As String
+        Get
+            Return GetRequired("ErpDuplicatedColumns")
+        End Get
+    End Property
+
     Private Function GetRequired(key As String) As String
         If _settings.ContainsKey(key) Then
             Return _settings(key)
