@@ -109,6 +109,14 @@ Module SolidEdgePropertyReader
         End Try
     End Function
 
+    Public Sub SetPropValue(propSet As Object, propName As String, value As String)
+        Try
+            propSet(propName).Value = value
+        Catch ex As Exception
+            Throw New Exception("Erro ao definir propriedades do documento: " & ex.Message)
+        End Try
+    End Sub
+
     Public Function GetPropSet(propSetName As String, doc As SolidEdgeDocument) As Object
         Try
             Return doc.Properties(propSetName)

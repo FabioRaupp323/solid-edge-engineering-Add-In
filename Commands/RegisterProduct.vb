@@ -20,13 +20,14 @@ Module RegisterProduct
 
 			If String.IsNullOrWhiteSpace(currentProduct.ItemCode) Then
 				currentProduct.ItemCode = Await erpRepository.DuplicateProduct(currentProduct, baseProduct)
-				'UpdateSEDocumentProperties(app, currentProduct)
 
 				MessageBox.Show("Produto cadastrado com sucesso. Código: " & currentProduct.ItemCode, "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information)
 			Else
 				Await erpRepository.UpdateProduct(currentProduct)
 				MessageBox.Show("As informações de Descrição e Referência do produto foram atualizadas com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information)
 			End If
+
+			UpdateSEDocumentProperties(app, currentProduct)
 
 		Catch ex As Exception
 			MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -35,18 +36,23 @@ Module RegisterProduct
 	End Sub
 
 	Private Function GetCurrentProduct(app As SolidEdgeFramework.Application) As ErpProduct
-		Try
-			Dim doc = TryCast(app.ActiveDocument, SolidEdgeDocument)
-			Dim product As New ErpProduct
+		Dim doc = TryCast(app.ActiveDocument, SolidEdgeDocument)
+		Dim product As New ErpProduct
 
-			Dim SI = GetPropSet("SummaryInformation", doc)
-			product.ItemCode = GetPropValue(SI, "Keywords")
-			product.Description = GetPropValue(SI, "Title")
-			product.Reference = GetPropValue(SI, "Comments")
+		Dim SI = GetPropSet("SummaryInformation", doc)
+		product.ItemCode = GetPropValue(SI, "Keywords")
+		product.Description = GetPropValue(SI, "Title")
+		product.Reference = GetPropValue(SI, "Comments")
 
-			Return product
-		Catch ex As Exception
-			Throw New Exception("Erro ao ler propriedades do documento: " & ex.Message)
-		End Try
+		Return product
 	End Function
+
+	Private Sub UpdateSEDocumentProperties(app As SolidEdgeFramework.Application, product As ErpProduct)
+		Dim doc = TryCast(app.ActiveDocument, SolidEdgeDocument)
+
+		Dim SI = GetPropSet("SummaryInformation", doc)
+		SetPropValue(SI, "Keywords", product.ItemCode)
+		SetPropValue(SI, "Title", product.Description)
+		SetPropValue(SI, "Comments", product.Reference)
+	End Sub
 End Module
