@@ -1,5 +1,4 @@
 ﻿Public Class ErpProduct
-	Public Property Id As Integer
 	Public Property ItemCode As String
 	Public Property Description As String
 	Public Property Reference As String

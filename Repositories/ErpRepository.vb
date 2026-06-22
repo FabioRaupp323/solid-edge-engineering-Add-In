@@ -24,7 +24,6 @@ Public Class ErpRepository
 			Using reader As SqlDataReader = Await cmd.ExecuteReaderAsync(token)
 				While Await reader.ReadAsync(token)
 					Dim product As New ErpProduct With {
-						.Id = Convert.ToInt32(reader("proID")),
 						.ItemCode = reader("proCodigo").ToString,
 						.Description = reader("proDescricao").ToString,
 						.Reference = reader("proReferencia").ToString
@@ -81,9 +80,8 @@ Public Class ErpRepository
 			Using trans = conn.BeginTransaction()
 				Try
 					Dim cmdReadLastCode As New SqlCommand("
-						SELECT conValor FROM Config
-						WHERE conID = 'Produto'
-						WITH (UPDLOCK, HOLDLOCK)", conn, trans)
+						SELECT conValor FROM Config WITH (UPDLOCK, HOLDLOCK)
+						WHERE conID = 'Produto'", conn, trans)
 
 					Dim lastCode As Integer = Convert.ToInt32(Await cmdReadLastCode.ExecuteScalarAsync())
 
