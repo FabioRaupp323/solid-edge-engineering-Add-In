@@ -27,8 +27,9 @@ Public Class Connect
         AddHandler AppDomain.CurrentDomain.AssemblyResolve, AddressOf CurrentDomain_AssemblyResolve
 
         _app = CType(Application, SolidEdgeFramework.Application)
+        AddInInstance.Description = Chr(10) & "AddIn TR"
         _addinEx = AddInInstance
-        _addinEx.GuiVersion = 1
+        _addinEx.GuiVersion = 15
         _addinFileName = Me.GetType().Module.FullyQualifiedName
 
         Dim cpc = DirectCast(_addinEx, IConnectionPointContainer)

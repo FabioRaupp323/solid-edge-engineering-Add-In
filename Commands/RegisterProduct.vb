@@ -30,7 +30,7 @@ Module RegisterProduct
 			UpdateSEDocumentProperties(app, currentProduct)
 
 		Catch ex As Exception
-			MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error)
+			MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly)
 		End Try
 
 	End Sub

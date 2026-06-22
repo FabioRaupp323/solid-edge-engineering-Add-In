@@ -16,7 +16,7 @@ Public Class CommandRegistry
         _addinEx.SetAddInInfoEx(
                 _addinFileName,
                 EnvCatID,
-                "Análise de BOM",
+                "Add-In TR",
                 0, 0, 0, 0,
                 1,
                 names,
@@ -24,7 +24,7 @@ Public Class CommandRegistry
             )
 
         If bFirstTime Then
-            Dim btn = _addinEx.AddCommandBarButton(EnvCatID, "Análise de BOM", 1001)
+            Dim btn = _addinEx.AddCommandBarButton(EnvCatID, "Add-In TR", 1001)
             btn.Style = SeButtonStyle.seButtonIconAndCaptionBelow
             btn.LoadFace(AppSettings.IconBomPath)
         End If
@@ -38,7 +38,7 @@ Public Class CommandRegistry
         _addinEx.SetAddInInfoEx(
                 _addinFileName,
                 EnvCatID,
-                "Exportar DFT",
+                "Add-In TR",
                 0, 0, 0, 0,
                 1,
                 names,
@@ -46,7 +46,7 @@ Public Class CommandRegistry
             )
 
         If bFirstTime Then
-            Dim btnPDF = _addinEx.AddCommandBarButton(EnvCatID, "Exportar DFT", 2001)
+            Dim btnPDF = _addinEx.AddCommandBarButton(EnvCatID, "Add-In TR", 2001)
             btnPDF.Style = SeButtonStyle.seButtonIconAndCaptionBelow
             btnPDF.LoadFace(AppSettings.IconDftPath)
         End If
@@ -61,7 +61,7 @@ Public Class CommandRegistry
         _addinEx.SetAddInInfoEx(
                 _addinFileName,
                 EnvCatID,
-                "Exportar 3D",
+                "Add-In TR",
                 0, 0, 0, 0,
                 2,
                 names,
@@ -70,11 +70,11 @@ Public Class CommandRegistry
 
         If bFirstTime Then
 
-            Dim btnStep = _addinEx.AddCommandBarButton(EnvCatID, "Exportar 3D", 3001)
+            Dim btnStep = _addinEx.AddCommandBarButton(EnvCatID, "Add-In TR", 3001)
             btnStep.Style = SeButtonStyle.seButtonIconAndCaptionBelow
             btnStep.LoadFace(AppSettings.IconStepPath)
 
-            Dim btnIgs = _addinEx.AddCommandBarButton(EnvCatID, "Exportar 3D", 3002)
+            Dim btnIgs = _addinEx.AddCommandBarButton(EnvCatID, "Add-In TR", 3002)
             btnIgs.Style = SeButtonStyle.seButtonIconAndCaptionBelow
             btnIgs.LoadFace(AppSettings.IconIgsPath)
         End If
@@ -88,7 +88,7 @@ Public Class CommandRegistry
         _addinEx.SetAddInInfoEx(
                 _addinFileName,
                 EnvCatID,
-                "Integração CAD x ERP",
+                "Add-In TR",
                 0, 0, 0, 0,
                 1,
                 names,
@@ -96,7 +96,7 @@ Public Class CommandRegistry
             )
 
         If bFirstTime Then
-            Dim btnCadastrarProduto = _addinEx.AddCommandBarButton(EnvCatID, "Integração CAD x ERP", 4001)
+            Dim btnCadastrarProduto = _addinEx.AddCommandBarButton(EnvCatID, "Add-In TR", 4001)
             btnCadastrarProduto.Style = SeButtonStyle.seButtonIconAndCaptionBelow
             btnCadastrarProduto.LoadFace(AppSettings.IconCadastrarProdutoPath)
         End If
