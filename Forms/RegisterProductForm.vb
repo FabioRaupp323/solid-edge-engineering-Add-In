@@ -1,4 +1,5 @@
-﻿Imports System.Threading
+﻿Imports System.Drawing
+Imports System.Threading
 Imports System.Windows.Forms
 
 Public Class RegisterProductForm
@@ -16,6 +17,9 @@ Public Class RegisterProductForm
 
 	Public Sub New(erpRepository As ErpRepository, currentProduct As ErpProduct)
 		InitializeComponent()
+
+		cmbBaseProduct.DrawMode = DrawMode.OwnerDrawVariable
+		cmbBaseProduct.IntegralHeight = False
 
 		_erpRepository = erpRepository
 		_currentProduct = currentProduct
@@ -99,6 +103,28 @@ Public Class RegisterProductForm
 
 		_selectedBaseProduct = cmbBaseProduct.SelectedItem
 		Me.DialogResult = DialogResult.OK
+	End Sub
+
+	Private Sub cmbBaseProduct_MeasureItem(sender As Object, e As MeasureItemEventArgs) Handles cmbBaseProduct.MeasureItem
+		If e.Index < 0 Then Return
+
+		Dim texto As String = cmbBaseProduct.Items(e.Index).ToString()
+
+		Dim tamanho As SizeF = e.Graphics.MeasureString(texto, cmbBaseProduct.Font, cmbBaseProduct.Width)
+
+		e.ItemHeight = CInt(tamanho.Height) + 4
+	End Sub
+
+	Private Sub cmbBaseProduct_DrawItem(sender As Object, e As DrawItemEventArgs) Handles cmbBaseProduct.DrawItem
+		If e.Index < 0 Then Return
+
+		e.DrawBackground()
+
+		Dim texto As String = cmbBaseProduct.Items(e.Index).ToString()
+
+		Dim cor As Color = If((e.State And DrawItemState.Selected) = DrawItemState.Selected, Color.White, Color.Black)
+
+		TextRenderer.DrawText(e.Graphics, texto, e.Font, e.Bounds, cor, TextFormatFlags.WordBreak Or TextFormatFlags.Left Or TextFormatFlags.VerticalCenter)
 	End Sub
 
 	Private Sub SetDefaultTexts()
