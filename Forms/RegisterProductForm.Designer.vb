@@ -22,6 +22,7 @@ Partial Class RegisterProductForm
 	'Do not modify it using the code editor.
 	<System.Diagnostics.DebuggerStepThrough()> _
 	Private Sub InitializeComponent()
+		Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(RegisterProductForm))
 		Me.lblBaseProduct = New System.Windows.Forms.Label()
 		Me.grpBaseProduct = New System.Windows.Forms.GroupBox()
 		Me.lblLoading = New System.Windows.Forms.Label()
@@ -55,8 +56,9 @@ Partial Class RegisterProductForm
 		Me.grpBaseProduct.Controls.Add(Me.lblLoading)
 		Me.grpBaseProduct.Controls.Add(Me.cmbBaseProduct)
 		Me.grpBaseProduct.Controls.Add(Me.lblBaseProduct)
+		Me.grpBaseProduct.FlatStyle = System.Windows.Forms.FlatStyle.System
 		Me.grpBaseProduct.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.grpBaseProduct.ForeColor = System.Drawing.SystemColors.ControlDarkDark
+		Me.grpBaseProduct.ForeColor = System.Drawing.SystemColors.GrayText
 		Me.grpBaseProduct.Location = New System.Drawing.Point(10, 5)
 		Me.grpBaseProduct.Name = "grpBaseProduct"
 		Me.grpBaseProduct.Size = New System.Drawing.Size(600, 79)
@@ -78,6 +80,7 @@ Partial Class RegisterProductForm
 		'
 		Me.cmbBaseProduct.BackColor = System.Drawing.SystemColors.Window
 		Me.cmbBaseProduct.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.cmbBaseProduct.ForeColor = System.Drawing.SystemColors.Desktop
 		Me.cmbBaseProduct.FormattingEnabled = True
 		Me.cmbBaseProduct.Location = New System.Drawing.Point(6, 44)
 		Me.cmbBaseProduct.Name = "cmbBaseProduct"
@@ -92,8 +95,9 @@ Partial Class RegisterProductForm
 		Me.grpProductInfo.Controls.Add(Me.lblDescription)
 		Me.grpProductInfo.Controls.Add(Me.txtItemCode)
 		Me.grpProductInfo.Controls.Add(Me.lblItemCode)
+		Me.grpProductInfo.FlatStyle = System.Windows.Forms.FlatStyle.System
 		Me.grpProductInfo.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.grpProductInfo.ForeColor = System.Drawing.SystemColors.ControlDarkDark
+		Me.grpProductInfo.ForeColor = System.Drawing.SystemColors.GrayText
 		Me.grpProductInfo.Location = New System.Drawing.Point(10, 90)
 		Me.grpProductInfo.Name = "grpProductInfo"
 		Me.grpProductInfo.Size = New System.Drawing.Size(600, 133)
@@ -105,7 +109,9 @@ Partial Class RegisterProductForm
 		'
 		Me.txtReference.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
 		Me.txtReference.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.txtReference.ForeColor = System.Drawing.SystemColors.Desktop
 		Me.txtReference.Location = New System.Drawing.Point(9, 100)
+		Me.txtReference.MaxLength = 30
 		Me.txtReference.Name = "txtReference"
 		Me.txtReference.Size = New System.Drawing.Size(585, 22)
 		Me.txtReference.TabIndex = 8
@@ -125,7 +131,9 @@ Partial Class RegisterProductForm
 		'
 		Me.txtDescription.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
 		Me.txtDescription.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.txtDescription.ForeColor = System.Drawing.SystemColors.Desktop
 		Me.txtDescription.Location = New System.Drawing.Point(126, 47)
+		Me.txtDescription.MaxLength = 120
 		Me.txtDescription.Name = "txtDescription"
 		Me.txtDescription.Size = New System.Drawing.Size(468, 22)
 		Me.txtDescription.TabIndex = 6
@@ -165,6 +173,7 @@ Partial Class RegisterProductForm
 		'btnSave
 		'
 		Me.btnSave.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.btnSave.ForeColor = System.Drawing.SystemColors.Desktop
 		Me.btnSave.Location = New System.Drawing.Point(535, 229)
 		Me.btnSave.Name = "btnSave"
 		Me.btnSave.Size = New System.Drawing.Size(75, 23)
@@ -175,6 +184,7 @@ Partial Class RegisterProductForm
 		'btnCancel
 		'
 		Me.btnCancel.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.btnCancel.ForeColor = System.Drawing.SystemColors.Desktop
 		Me.btnCancel.Location = New System.Drawing.Point(446, 229)
 		Me.btnCancel.Name = "btnCancel"
 		Me.btnCancel.Size = New System.Drawing.Size(83, 23)
@@ -192,6 +202,7 @@ Partial Class RegisterProductForm
 		Me.Controls.Add(Me.grpProductInfo)
 		Me.Controls.Add(Me.grpBaseProduct)
 		Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
+		Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
 		Me.Name = "RegisterProductForm"
 		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
 		Me.Text = "Cadastrar Produto"

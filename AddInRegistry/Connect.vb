@@ -29,7 +29,7 @@ Public Class Connect
         _app = CType(Application, SolidEdgeFramework.Application)
         AddInInstance.Description = Chr(10) & "AddIn TR"
         _addinEx = AddInInstance
-        _addinEx.GuiVersion = 15
+        _addinEx.GuiVersion = 19
         _addinFileName = Me.GetType().Module.FullyQualifiedName
 
         Dim cpc = DirectCast(_addinEx, IConnectionPointContainer)

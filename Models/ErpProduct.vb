@@ -4,6 +4,6 @@
 	Public Property Reference As String
 
 	Public Overrides Function ToString() As String
-		Return ItemCode & " - " & Description & " _ " & Reference
+		Return ItemCode & " - " & Description & " - " & Reference
 	End Function
 End Class

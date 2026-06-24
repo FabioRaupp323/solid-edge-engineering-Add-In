@@ -24,10 +24,13 @@ Public Class RegisterProductForm
 		_erpRepository = erpRepository
 		_currentProduct = currentProduct
 		SetDefaultTexts()
+		If Not String.IsNullOrWhiteSpace(currentProduct.ItemCode) Then
+			cmbBaseProduct.Enabled = False
+		End If
 
 		_cancellationToken = New CancellationTokenSource
 		_timer = New Windows.Forms.Timer
-		_timer.Interval = 500
+		_timer.Interval = 1000
 
 		AddHandler _timer.Tick, AddressOf TimerTick
 	End Sub
@@ -50,15 +53,16 @@ Public Class RegisterProductForm
 			Dim items As List(Of ErpProduct) = Await _erpRepository.SearchProduct(cmbBaseProduct.Text, _cancellationToken.Token)
 
 			cmbBaseProduct.BeginUpdate()
+			cmbBaseProduct.SelectedIndex = -1
 			cmbBaseProduct.Items.Clear()
 			For Each item In items
 				cmbBaseProduct.Items.Add(item)
 			Next
 			cmbBaseProduct.EndUpdate()
 
-			If items.Count > 0 Then
-				cmbBaseProduct.DroppedDown = True
-			End If
+			cmbBaseProduct.DroppedDown = True
+
+			cmbBaseProduct.SelectionStart = cmbBaseProduct.Text.Length
 
 		Catch ex As OperationCanceledException
 
@@ -75,10 +79,6 @@ Public Class RegisterProductForm
 
 		If String.IsNullOrWhiteSpace(txtDescription.Text) Then
 			MessageBox.Show("O campo 'Descrição' não pode ser vazio", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-			Exit Sub
-
-		ElseIf String.IsNullOrWhiteSpace(txtReference.Text) Then
-			MessageBox.Show("O campo 'Referência' não pode ser vazio", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
 			Exit Sub
 		End If
 
@@ -97,8 +97,8 @@ Public Class RegisterProductForm
 			End If
 		End If
 
-		_currentProduct.Description = txtDescription.Text.Trim
-		_currentProduct.Reference = txtReference.Text.Trim
+		_currentProduct.Description = txtDescription.Text.Trim.ToUpper
+		_currentProduct.Reference = txtReference.Text.Trim.ToUpper
 		_currentProduct.ItemCode = txtItemCode.Text.Trim
 
 		_selectedBaseProduct = cmbBaseProduct.SelectedItem
@@ -132,5 +132,14 @@ Public Class RegisterProductForm
 		txtDescription.Text = _currentProduct.Description
 		txtReference.Text = _currentProduct.Reference
 
+	End Sub
+
+	Private Sub cmbBaseProduct_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cmbBaseProduct.SelectionChangeCommitted
+		If String.IsNullOrWhiteSpace(txtDescription.Text) Then
+			txtDescription.Text = cmbBaseProduct.SelectedItem.Description
+		End If
+		If String.IsNullOrWhiteSpace(txtReference.Text) Then
+			txtReference.Text = cmbBaseProduct.SelectedItem.Reference
+		End If
 	End Sub
 End Class
