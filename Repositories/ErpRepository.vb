@@ -1,5 +1,6 @@
 ﻿Imports System.Data.SqlClient
 Imports System.Threading
+Imports SolidEdgeConstants
 
 Public Class ErpRepository
 	Private _connectionString As String
@@ -10,26 +11,47 @@ Public Class ErpRepository
 
 	Public Async Function SearchProduct(text As String, token As CancellationToken) As Task(Of List(Of ErpProduct))
 		Dim fetched As New List(Of ErpProduct)
+
+		If text.Trim.Length < 3 Then
+			Return fetched
+		End If
+
+		Dim terms = text.Split(
+			{" "c, ControlChars.Tab, ControlChars.Cr, ControlChars.Lf},
+			StringSplitOptions.RemoveEmptyEntries
+		)
+
 		Using conn As New SqlConnection(_connectionString)
 			Await conn.OpenAsync(token)
 
-			Dim cmd As New SqlCommand("
-				SELECT proID, proCodigo, proDescricao, proReferencia FROM Produto 
-				WHERE proCodigo LIKE @text 
-				OR proDescricao LIKE @text 
-				OR proReferencia LIKE @text", conn)
+			Dim sql As New System.Text.StringBuilder()
+			sql.AppendLine("SELECT proCodigo, proDescricao, proReferencia")
+			sql.AppendLine("FROM Produto")
+			sql.AppendLine("WHERE 1 = 1")
 
-			cmd.Parameters.AddWithValue("@text", "%" & text & "%")
+			For i As Integer = 0 To terms.Length - 1
+				sql.AppendLine("AND (")
+				sql.AppendLine($"	proCodigo LIKE @t{i}")
+				sql.AppendLine($"	OR proDescricao LIKE @t{i}")
+				sql.AppendLine($"	OR proReferencia LIKE @t{i}")
+				sql.AppendLine(")")
+			Next
 
-			Using reader As SqlDataReader = Await cmd.ExecuteReaderAsync(token)
-				While Await reader.ReadAsync(token)
-					Dim product As New ErpProduct With {
-						.ItemCode = reader("proCodigo").ToString,
-						.Description = reader("proDescricao").ToString,
-						.Reference = reader("proReferencia").ToString
-					}
-					fetched.Add(product)
-				End While
+			Using cmd As New SqlCommand(sql.ToString(), conn)
+				For i As Integer = 0 To terms.Length - 1
+					cmd.Parameters.AddWithValue($"t{i}", "%" & terms(i) & "%")
+				Next
+
+				Using reader As SqlDataReader = Await cmd.ExecuteReaderAsync(token)
+					While Await reader.ReadAsync(token)
+						Dim product As New ErpProduct With {
+							.ItemCode = reader("proCodigo").ToString(),
+							.Description = reader("proDescricao").ToString(),
+							.Reference = reader("proReferencia").ToString()
+						}
+						fetched.Add(product)
+					End While
+				End Using
 			End Using
 		End Using
 
@@ -63,7 +85,7 @@ Public Class ErpRepository
 
 			cmd.Parameters.AddWithValue("@itemCode", product.ItemCode)
 			cmd.Parameters.AddWithValue("@description", product.Description)
-			cmd.Parameters.AddWithValue("@reference", product.Reference)
+			cmd.Parameters.AddWithValue("@reference", If(String.IsNullOrWhiteSpace(product.Reference), DBNull.Value, product.Reference))
 
 			Dim rowsAffected As Integer = Await cmd.ExecuteNonQueryAsync()
 
@@ -106,7 +128,7 @@ Public Class ErpRepository
 
 					cmdDuplicateProduct.Parameters.AddWithValue("@nextCodeFormated", nextCodeFormated)
 					cmdDuplicateProduct.Parameters.AddWithValue("@currentDescription", currentProduct.Description)
-					cmdDuplicateProduct.Parameters.AddWithValue("@currentReference", currentProduct.Reference)
+					cmdDuplicateProduct.Parameters.AddWithValue("@currentReference", If(String.IsNullOrWhiteSpace(currentProduct.Reference), DBNull.Value, currentProduct.Reference))
 					cmdDuplicateProduct.Parameters.AddWithValue("@baseCode", baseProduct.ItemCode)
 
 					Await cmdDuplicateProduct.ExecuteNonQueryAsync()
