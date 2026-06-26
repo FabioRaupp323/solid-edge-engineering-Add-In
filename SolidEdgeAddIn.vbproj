@@ -137,6 +137,7 @@
     <Compile Include="Repositories\BomRepository.vb" />
     <Compile Include="Repositories\ErpRepository.vb" />
     <Compile Include="Services\SolidEdgePropertyReader.vb" />
+    <Compile Include="Services\WindowWrapper.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\RegisterProductForm.resx">

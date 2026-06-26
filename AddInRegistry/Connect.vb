@@ -1,10 +1,11 @@
 ﻿Imports System.IO
+Imports System.Net
 Imports System.Reflection
 Imports System.Runtime.InteropServices
 Imports System.Runtime.InteropServices.ComTypes
-Imports SolidEdgeFramework
-Imports System.Net
 Imports System.Threading
+Imports System.Windows.Forms
+Imports SolidEdgeFramework
 
 <ComVisible(True)>
 <Guid("A1B2C3D4-E5F6-47D1-98A1-B23456789ABC")>
@@ -92,7 +93,7 @@ Public Class Connect
 
             End Select
         Catch ex As Exception
-            MsgBox("Erro: " & ex.ToString)
+            MessageBox.Show(New WindowWrapper(_app.hWnd), "Erro: " & ex.ToString, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 

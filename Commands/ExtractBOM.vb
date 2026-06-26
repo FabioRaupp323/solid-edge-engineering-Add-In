@@ -1,4 +1,5 @@
 ﻿Imports System.Collections.Specialized
+Imports System.Windows.Forms
 Imports SolidEdgeAssembly
 
 Module ExtractBOM
@@ -7,12 +8,12 @@ Module ExtractBOM
         Try
             Dim asm = TryCast(app.ActiveDocument, AssemblyDocument)
             If asm Is Nothing Then
-                MsgBox("Abra uma montagem antes de usar este comando.")
+                MessageBox.Show(New WindowWrapper(app.hWnd), "Abra uma montagem antes de usar este comando.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Exit Sub
             End If
 
             If asm.Occurrences.Count = 0 Then
-                MsgBox("Montagem vazia.")
+                MessageBox.Show(New WindowWrapper(app.hWnd), "Montagem vazia.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Exit Sub
             End If
 
@@ -37,9 +38,9 @@ Module ExtractBOM
 
             BOMrepository.SaveToDB(serial, version, items, asm.Name, customer)
 
-            MsgBox("BOM salva no banco de dados com sucesso!")
+            MessageBox.Show(New WindowWrapper(app.hWnd), "BOM salva no banco de dados com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
-            MsgBox("Processo interrompido: " & ex.Message)
+            MessageBox.Show(New WindowWrapper(app.hWnd), "Processo interrompido: " & ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 

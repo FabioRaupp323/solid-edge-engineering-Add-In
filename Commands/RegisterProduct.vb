@@ -21,16 +21,16 @@ Module RegisterProduct
 			If String.IsNullOrWhiteSpace(currentProduct.ItemCode) Then
 				currentProduct.ItemCode = Await erpRepository.DuplicateProduct(currentProduct, baseProduct)
 
-				MessageBox.Show("Produto cadastrado com sucesso. Código: " & currentProduct.ItemCode, "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information)
+				MessageBox.Show(New WindowWrapper(app.hWnd), "Produto cadastrado com sucesso. Código: " & currentProduct.ItemCode, "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information)
 			Else
 				Await erpRepository.UpdateProduct(currentProduct)
-				MessageBox.Show("As informações de Descrição e Referência do produto foram atualizadas com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information)
+				MessageBox.Show(New WindowWrapper(app.hWnd), "As informações de Descrição e Referência do produto foram atualizadas com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information)
 			End If
 
 			UpdateSEDocumentProperties(app, currentProduct)
 
 		Catch ex As Exception
-			MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly)
+			MessageBox.Show(New WindowWrapper(app.hWnd), ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error)
 		End Try
 
 	End Sub

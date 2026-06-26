@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports System.Windows.Forms
 Imports SolidEdgeFramework
 
 Module Export3D
@@ -18,10 +19,10 @@ Module Export3D
 				File.Delete(autoCreatedLogFile)
 			End If
 
-			MsgBox($"Arquivo {IO.Path.GetFileName(path)} salvo em {AppSettings.StepIgsOutputPath}")
+			MessageBox.Show(New WindowWrapper(app.hWnd), $"Arquivo {IO.Path.GetFileName(path)} salvo em {AppSettings.StepIgsOutputPath}", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
 		Catch ex As Exception
-			MsgBox("Processo exportação do STEP interrompido: " & ex.Message)
+			MessageBox.Show(New WindowWrapper(app.hWnd), "Processo exportação do STEP interrompido: " & ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error)
 		End Try
 
 	End Sub

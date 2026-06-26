@@ -78,19 +78,19 @@ Public Class RegisterProductForm
 	Private Async Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
 
 		If String.IsNullOrWhiteSpace(txtDescription.Text) Then
-			MessageBox.Show("O campo 'Descrição' não pode ser vazio", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+			MessageBox.Show(Me, "O campo 'Descrição' não pode ser vazio", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
 			Exit Sub
 		End If
 
 		If String.IsNullOrWhiteSpace(txtItemCode.Text) Then
 			If cmbBaseProduct.SelectedItem Is Nothing Then
-				MessageBox.Show("Selecione um produto base para o cadastro.", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+				MessageBox.Show(Me, "Selecione um produto base para o cadastro.", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
 				Exit Sub
 
 			End If
 		Else
 			If Not Await _erpRepository.ProductExists(txtItemCode.Text) Then
-				MessageBox.Show("Nenhum produto encontrado com o código " & txtItemCode.Text & ". Selecione um produto base para criar um novo cadastro.", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+				MessageBox.Show(Me, "Nenhum produto encontrado com o código " & txtItemCode.Text & ". Selecione um produto base para criar um novo cadastro.", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
 				txtItemCode.Text = ""
 				Exit Sub
 

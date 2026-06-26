@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports System.Windows.Forms
 Imports SolidEdgeDraft
 Imports SolidEdgeFramework
 
@@ -37,7 +38,7 @@ Module ExportDft
 					sheetDrawing.Activate()
 					dft.SaveAs(pathPDF)
 
-					MsgBox($"Arquivo {Path.GetFileName(pathPDF)} salvo em {AppSettings.PdfDxfOutputPath}")
+					MessageBox.Show(New WindowWrapper(app.hWnd), $"Arquivo {Path.GetFileName(pathPDF)} salvo em {AppSettings.PdfDxfOutputPath}", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information)
 				Else
 					Throw New Exception("Folha ""Desenho"" não encontrada.")
 				End If
@@ -80,7 +81,7 @@ Module ExportDft
 					Dim files = Directory.GetFiles(AppSettings.PdfDxfOutputPath, itemCode & "*.dwg")
 					For Each file In files
 						IO.File.Delete(file)
-						MsgBox($"Arquivo DWG desatualizado ""{file}"" deletado.")
+						MessageBox.Show(New WindowWrapper(app.hWnd), $"Arquivo DWG desatualizado ""{file}"" deletado.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information)
 					Next
 
 					For Each sheet In sheetsWithContent
@@ -88,7 +89,7 @@ Module ExportDft
 
 						sheet.Activate()
 						dft.SaveAs(path)
-						MsgBox($"Arquivo {IO.Path.GetFileName(path)} salvo em {AppSettings.PdfDxfOutputPath}")
+						MessageBox.Show(New WindowWrapper(app.hWnd), $"Arquivo {IO.Path.GetFileName(path)} salvo em {AppSettings.PdfDxfOutputPath}", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information)
 					Next
 				End If
 
@@ -96,7 +97,7 @@ Module ExportDft
 				Throw New Exception("Processo exportação do DXF interrompido: " & ex.Message)
 			End Try
 		Catch ex As Exception
-			MsgBox("Erro. " & ex.Message)
+			MessageBox.Show(New WindowWrapper(app.hWnd), "Erro. " & ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error)
 		End Try
 	End Sub
 
