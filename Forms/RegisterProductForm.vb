@@ -82,6 +82,16 @@ Public Class RegisterProductForm
 			Exit Sub
 		End If
 
+		If txtDescription.Text.Length > 120 Then
+			MessageBox.Show(Me, "O campo 'Descrição' não pode ter mais de 120 caracteres", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+			Exit Sub
+		End If
+
+		If txtReference.Text.Length > 30 Then
+			MessageBox.Show(Me, "O campo 'Referência' não pode ter mais de 30 caracteres", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+			Exit Sub
+		End If
+
 		If String.IsNullOrWhiteSpace(txtItemCode.Text) Then
 			If cmbBaseProduct.SelectedItem Is Nothing Then
 				MessageBox.Show(Me, "Selecione um produto base para o cadastro.", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
