@@ -46,7 +46,7 @@ Module ExtractBOM
 
     Private Sub AddRootItem(asm As AssemblyDocument, items As OrderedDictionary)
 
-        Dim item = SolidEdgePropertyReader.ReadDocumentProperties(asm)
+        Dim item = SolidEdgePropertyHelper.ReadDocumentProperties(asm)
 
         item.Quantity = 1
         item.PathParent = "ROOT"
@@ -70,7 +70,7 @@ Module ExtractBOM
                     Continue For
                 End If
 
-                Dim item = SolidEdgePropertyReader.ReadDocumentProperties(occ.OccurrenceDocument)
+                Dim item = SolidEdgePropertyHelper.ReadDocumentProperties(occ.OccurrenceDocument)
                 item.Quantity = 1
                 item.PathParent = parentFile
                 item.Path3D = path3D

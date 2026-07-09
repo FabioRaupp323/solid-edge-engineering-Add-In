@@ -30,7 +30,7 @@ Public Class Connect
         _app = CType(Application, SolidEdgeFramework.Application)
         AddInInstance.Description = Chr(10) & "AddIn TR"
         _addinEx = AddInInstance
-        _addinEx.GuiVersion = 19
+        _addinEx.GuiVersion = 26
         _addinFileName = Me.GetType().Module.FullyQualifiedName
 
         Dim cpc = DirectCast(_addinEx, IConnectionPointContainer)
@@ -79,17 +79,21 @@ Public Class Connect
                 Case CATID_SEAssembly
                     reg.RegisterBOMGroup(EnvCatID, bFirstTime)
                     reg.RegisterCadastrarProdutoGroup(EnvCatID, bFirstTime)
+                    reg.RegisterRevisarGroup(EnvCatID, bFirstTime)
 
                 Case CATID_SEDraft
                     reg.RegisterExportDFTGroup(EnvCatID, bFirstTime)
+                    reg.RegisterRevisarGroup(EnvCatID, bFirstTime)
 
                 Case CATID_SEPart
                     reg.RegisterExport3DGroup(EnvCatID, bFirstTime)
                     reg.RegisterCadastrarProdutoGroup(EnvCatID, bFirstTime)
+                    reg.RegisterRevisarGroup(EnvCatID, bFirstTime)
 
                 Case CATID_SESheetMetal
                     reg.RegisterExport3DGroup(EnvCatID, bFirstTime)
                     reg.RegisterCadastrarProdutoGroup(EnvCatID, bFirstTime)
+                    reg.RegisterRevisarGroup(EnvCatID, bFirstTime)
 
             End Select
         Catch ex As Exception
@@ -116,6 +120,8 @@ Public Class Connect
             Case 4001
                 RegisterProduct.RegisterProduct(_app)
 
+            Case 5001
+                Revision.Revise(_app)
         End Select
     End Sub
 

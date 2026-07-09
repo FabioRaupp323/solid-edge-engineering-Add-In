@@ -102,4 +102,26 @@ Public Class CommandRegistry
         End If
 
     End Sub
+
+    Public Sub RegisterRevisarGroup(EnvCatID As String, bFirstTime As Boolean)
+        Dim names = {"Revisar" & vbLf & "Revisar" & vbLf & "Incrementa número da revisão e atribui o status ""Available""" & vbLf & "Revisar"}
+        Dim ids = {5001}
+
+        _addinEx.SetAddInInfoEx(
+                _addinFileName,
+                EnvCatID,
+                "Add-In TR",
+                0, 0, 0, 0,
+                1,
+                names,
+                ids
+            )
+
+        If bFirstTime Then
+            Dim btnRevisar = _addinEx.AddCommandBarButton(EnvCatID, "Add-In TR", 5001)
+            btnRevisar.Style = SeButtonStyle.seButtonIconAndCaptionBelow
+            btnRevisar.LoadFace(AppSettings.IconRevisarPath)
+        End If
+
+    End Sub
 End Class

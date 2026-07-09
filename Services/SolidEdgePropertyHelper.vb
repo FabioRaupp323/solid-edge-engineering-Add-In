@@ -5,7 +5,7 @@ Imports System.Windows.Interop
 Imports SolidEdgeFileProperties
 Imports SolidEdgeFramework
 
-Module SolidEdgePropertyReader
+Module SolidEdgePropertyHelper
 
     Public Function ReadDocumentProperties(doc As SolidEdgeDocument) As BomItem
         Try
@@ -124,4 +124,25 @@ Module SolidEdgePropertyReader
             Return ""
         End Try
     End Function
+
+    Public Sub SetPropertyViaFileProperties(propSetName As String, propName As String, value As String, docPath As String)
+        Try
+            Dim propSets = New SolidEdgeFileProperties.PropertySets
+            propSets.Open(docPath, False)
+
+            Dim propSet As Object = propSets(propSetName)
+            Dim prop As Object = propSet(propName)
+
+            prop.Value = value
+
+            propSet.Save()
+            propSets.Save()
+            propSets.Close()
+            Marshal.ReleaseComObject(propSets)
+            propSets = Nothing
+
+        Catch ex As Exception
+            Throw New Exception("Erro ao definir propriedades via FileProperties do documento: " & ex.Message)
+        End Try
+    End Sub
 End Module

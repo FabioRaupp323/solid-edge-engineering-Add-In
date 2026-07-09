@@ -111,6 +111,7 @@
     <Compile Include="AddInRegistry\Connect.vb" />
     <Compile Include="AddInRegistry\CommandRegistry.vb" />
     <Compile Include="Commands\RegisterProduct.vb" />
+    <Compile Include="Commands\Revision.vb" />
     <Compile Include="Forms\RegisterProductForm.Designer.vb">
       <DependentUpon>RegisterProductForm.vb</DependentUpon>
     </Compile>
@@ -136,7 +137,7 @@
     </Compile>
     <Compile Include="Repositories\BomRepository.vb" />
     <Compile Include="Repositories\ErpRepository.vb" />
-    <Compile Include="Services\SolidEdgePropertyReader.vb" />
+    <Compile Include="Services\SolidEdgePropertyHelper.vb" />
     <Compile Include="Services\WindowWrapper.vb" />
   </ItemGroup>
   <ItemGroup>
