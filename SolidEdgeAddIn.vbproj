@@ -105,6 +105,7 @@
   <ItemGroup>
     <Compile Include="AddInRegistry\SolidEdgeCATIDs.vb" />
     <Compile Include="AppSettings.vb" />
+    <Compile Include="Commands\DuplicateProductFiles.vb" />
     <Compile Include="Commands\Export3D.vb" />
     <Compile Include="Commands\ExportDft.vb" />
     <Compile Include="Commands\ExtractBOM.vb" />
