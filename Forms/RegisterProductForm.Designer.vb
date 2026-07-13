@@ -36,6 +36,7 @@ Partial Class RegisterProductForm
 		Me.lblItemCode = New System.Windows.Forms.Label()
 		Me.btnSave = New System.Windows.Forms.Button()
 		Me.btnCancel = New System.Windows.Forms.Button()
+		Me.btnDuplicate = New System.Windows.Forms.Button()
 		Me.grpBaseProduct.SuspendLayout()
 		Me.grpProductInfo.SuspendLayout()
 		Me.SuspendLayout()
@@ -192,11 +193,23 @@ Partial Class RegisterProductForm
 		Me.btnCancel.Text = "Cancelar"
 		Me.btnCancel.UseVisualStyleBackColor = True
 		'
+		'btnDuplicate
+		'
+		Me.btnDuplicate.Enabled = False
+		Me.btnDuplicate.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.btnDuplicate.ForeColor = System.Drawing.SystemColors.Desktop
+		Me.btnDuplicate.Location = New System.Drawing.Point(8, 457)
+		Me.btnDuplicate.Name = "btnDuplicate"
+		Me.btnDuplicate.Size = New System.Drawing.Size(83, 26)
+		Me.btnDuplicate.TabIndex = 6
+		Me.btnDuplicate.Text = "Duplicar"
+		Me.btnDuplicate.UseVisualStyleBackColor = True
 		'RegisterProductForm
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.ClientSize = New System.Drawing.Size(618, 260)
+		Me.Controls.Add(Me.btnDuplicate)
 		Me.Controls.Add(Me.btnCancel)
 		Me.Controls.Add(Me.btnSave)
 		Me.Controls.Add(Me.grpProductInfo)
@@ -227,4 +240,5 @@ Partial Class RegisterProductForm
 	Friend WithEvents txtReference As Windows.Forms.TextBox
 	Friend WithEvents btnSave As Windows.Forms.Button
 	Friend WithEvents btnCancel As Windows.Forms.Button
+	Friend WithEvents btnDuplicate As Windows.Forms.Button
 End Class

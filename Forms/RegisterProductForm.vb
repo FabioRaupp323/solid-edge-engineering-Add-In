@@ -23,10 +23,11 @@ Public Class RegisterProductForm
 
 		_erpRepository = erpRepository
 		_currentProduct = currentProduct
-		SetDefaultTexts()
 		If Not String.IsNullOrWhiteSpace(currentProduct.ItemCode) Then
 			cmbBaseProduct.Enabled = False
+			btnDuplicate.Enabled = True
 		End If
+		SetDefaultTexts()
 
 		_cancellationToken = New CancellationTokenSource
 		_timer = New Windows.Forms.Timer
@@ -75,7 +76,7 @@ Public Class RegisterProductForm
 		Me.DialogResult = DialogResult.Cancel
 	End Sub
 
-	Private Async Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
+	Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
 
 		If String.IsNullOrWhiteSpace(txtDescription.Text) Then
 			MessageBox.Show(Me, "O campo 'Descrição' não pode ser vazio", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -98,13 +99,6 @@ Public Class RegisterProductForm
 				Exit Sub
 
 			End If
-		Else
-			If Not Await _erpRepository.ProductExists(txtItemCode.Text) Then
-				MessageBox.Show(Me, "Nenhum produto encontrado com o código " & txtItemCode.Text & ". Selecione um produto base para criar um novo cadastro.", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-				txtItemCode.Text = ""
-				Exit Sub
-
-			End If
 		End If
 
 		_currentProduct.Description = txtDescription.Text.Trim.ToUpper
@@ -113,6 +107,10 @@ Public Class RegisterProductForm
 
 		_selectedBaseProduct = cmbBaseProduct.SelectedItem
 		Me.DialogResult = DialogResult.OK
+	End Sub
+
+	Private Sub btnDuplicate_Click(sender As Object, e As EventArgs) Handles btnDuplicate.Click
+		Me.DialogResult = DialogResult.Yes
 	End Sub
 
 	Private Sub cmbBaseProduct_MeasureItem(sender As Object, e As MeasureItemEventArgs) Handles cmbBaseProduct.MeasureItem
@@ -151,5 +149,6 @@ Public Class RegisterProductForm
 		If String.IsNullOrWhiteSpace(txtReference.Text) Then
 			txtReference.Text = cmbBaseProduct.SelectedItem.Reference
 		End If
+
 	End Sub
 End Class

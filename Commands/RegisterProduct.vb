@@ -9,10 +9,18 @@ Module RegisterProduct
 
 			Dim erpRepository As New ErpRepository(AppSettings.ErpConnectionString)
 
+			If Not String.IsNullOrWhiteSpace(currentProduct.ItemCode) AndAlso Not Await erpRepository.ProductExists(currentProduct.ItemCode) Then
+				MessageBox.Show(New WindowWrapper(app.hWnd), "Nenhum produto encontrado com o código " & currentProduct.ItemCode & ". Selecione um produto base para criar um novo cadastro.", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+				currentProduct.ItemCode = ""
+			End If
+
 			Dim registerProductForm As New RegisterProductForm(erpRepository, currentProduct)
 			registerProductForm.ShowDialog()
 
-			If registerProductForm.DialogResult = System.Windows.Forms.DialogResult.Cancel Then
+			If registerProductForm.DialogResult = DialogResult.Cancel Then
+				Exit Sub
+			ElseIf registerProductForm.DialogResult = DialogResult.Yes Then
+				Await DuplicateProductFiles.Run(app, currentProduct, erpRepository)
 				Exit Sub
 			End If
 
@@ -37,7 +45,7 @@ Module RegisterProduct
 
 	Private Function GetCurrentProduct(app As SolidEdgeFramework.Application) As ErpProduct
 		Dim doc = TryCast(app.ActiveDocument, SolidEdgeDocument)
-		Dim product As New ErpProduct
+		Dim product As New ErpProduct With {.FilePath = doc.FullName}
 
 		Dim SI = GetPropSet("SummaryInformation", doc)
 		product.ItemCode = GetPropValue(SI, "Keywords")
