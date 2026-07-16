@@ -14,6 +14,8 @@ Module RegisterProduct
 				currentProduct.ItemCode = ""
 			End If
 
+			Await erpRepository.GetProductDetails(currentProduct)
+
 			Dim registerProductForm As New RegisterProductForm(erpRepository, currentProduct)
 			registerProductForm.ShowDialog()
 
@@ -32,7 +34,7 @@ Module RegisterProduct
 				MessageBox.Show(New WindowWrapper(app.hWnd), "Produto cadastrado com sucesso. Código: " & currentProduct.ItemCode, "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information)
 			Else
 				Await erpRepository.UpdateProduct(currentProduct)
-				MessageBox.Show(New WindowWrapper(app.hWnd), "As informações de Descrição e Referência do produto foram atualizadas com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information)
+				MessageBox.Show(New WindowWrapper(app.hWnd), "As informações do produto foram atualizadas com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information)
 			End If
 
 			UpdateSEDocumentProperties(app, currentProduct)
@@ -62,5 +64,6 @@ Module RegisterProduct
 		SetPropValue(SI, "Keywords", product.ItemCode)
 		SetPropValue(SI, "Title", product.Description)
 		SetPropValue(SI, "Comments", product.Reference)
+		doc.Save()
 	End Sub
 End Module
