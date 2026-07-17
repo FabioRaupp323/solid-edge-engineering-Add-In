@@ -86,6 +86,12 @@ Module AppSettings
         End Get
     End Property
 
+    Public ReadOnly Property IconLiberarPath As String
+        Get
+            Return GetRequired("IconLiberarPath")
+        End Get
+    End Property
+
     Public ReadOnly Property ErpDuplicatedColumns As String
         Get
             Return GetRequired("ErpDuplicatedColumns")

@@ -6,6 +6,7 @@ Imports System.Runtime.InteropServices.ComTypes
 Imports System.Threading
 Imports System.Windows.Forms
 Imports SolidEdgeFramework
+Imports SolidEdgePart
 
 <ComVisible(True)>
 <Guid("A1B2C3D4-E5F6-47D1-98A1-B23456789ABC")>
@@ -30,7 +31,7 @@ Public Class Connect
         _app = CType(Application, SolidEdgeFramework.Application)
         AddInInstance.Description = Chr(10) & "AddIn TR"
         _addinEx = AddInInstance
-        _addinEx.GuiVersion = 26
+        _addinEx.GuiVersion = 27
         _addinFileName = Me.GetType().Module.FullyQualifiedName
 
         Dim cpc = DirectCast(_addinEx, IConnectionPointContainer)
@@ -80,20 +81,24 @@ Public Class Connect
                     reg.RegisterBOMGroup(EnvCatID, bFirstTime)
                     reg.RegisterCadastrarProdutoGroup(EnvCatID, bFirstTime)
                     reg.RegisterRevisarGroup(EnvCatID, bFirstTime)
+                    reg.RegisterLiberarGroup(EnvCatID, bFirstTime)
 
                 Case CATID_SEDraft
                     reg.RegisterExportDFTGroup(EnvCatID, bFirstTime)
                     reg.RegisterRevisarGroup(EnvCatID, bFirstTime)
+                    reg.RegisterLiberarGroup(EnvCatID, bFirstTime)
 
                 Case CATID_SEPart
                     reg.RegisterExport3DGroup(EnvCatID, bFirstTime)
                     reg.RegisterCadastrarProdutoGroup(EnvCatID, bFirstTime)
                     reg.RegisterRevisarGroup(EnvCatID, bFirstTime)
+                    reg.RegisterLiberarGroup(EnvCatID, bFirstTime)
 
                 Case CATID_SESheetMetal
                     reg.RegisterExport3DGroup(EnvCatID, bFirstTime)
                     reg.RegisterCadastrarProdutoGroup(EnvCatID, bFirstTime)
                     reg.RegisterRevisarGroup(EnvCatID, bFirstTime)
+                    reg.RegisterLiberarGroup(EnvCatID, bFirstTime)
 
             End Select
         Catch ex As Exception
@@ -122,6 +127,9 @@ Public Class Connect
 
             Case 5001
                 Revision.Revise(_app)
+
+            Case 6001
+                Release.ReleaseDocument(_app)
         End Select
     End Sub
 

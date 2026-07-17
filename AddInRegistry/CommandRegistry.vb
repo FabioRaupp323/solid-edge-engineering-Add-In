@@ -124,4 +124,26 @@ Public Class CommandRegistry
         End If
 
     End Sub
+
+    Public Sub RegisterLiberarGroup(EnvCatID As String, bFirstTime As Boolean)
+        Dim names = {"Liberar" & vbLf & "Liberar" & vbLf & "Atribui o status ""Released""" & vbLf & "Liberar"}
+        Dim ids = {6001}
+
+        _addinEx.SetAddInInfoEx(
+                _addinFileName,
+                EnvCatID,
+                "Add-In TR",
+                0, 0, 0, 0,
+                1,
+                names,
+                ids
+            )
+
+        If bFirstTime Then
+            Dim btnLiberar = _addinEx.AddCommandBarButton(EnvCatID, "Add-In TR", 6001)
+            btnLiberar.Style = SeButtonStyle.seButtonIconAndCaptionBelow
+            btnLiberar.LoadFace(AppSettings.IconLiberarPath)
+        End If
+
+    End Sub
 End Class

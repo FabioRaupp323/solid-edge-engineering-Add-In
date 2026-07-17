@@ -112,6 +112,7 @@
     <Compile Include="AddInRegistry\Connect.vb" />
     <Compile Include="AddInRegistry\CommandRegistry.vb" />
     <Compile Include="Commands\RegisterProduct.vb" />
+    <Compile Include="Commands\Release.vb" />
     <Compile Include="Commands\Revision.vb" />
     <Compile Include="Forms\RegisterProductForm.Designer.vb">
       <DependentUpon>RegisterProductForm.vb</DependentUpon>
