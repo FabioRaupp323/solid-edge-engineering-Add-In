@@ -6,6 +6,7 @@ Module DuplicateProductFiles
 	Public Async Function Run(app As SolidEdgeFramework.Application, baseProduct As ErpProduct, erpRepository As ErpRepository) As Task
 		Try
 			Dim folderDialog As New FolderBrowserDialog()
+			folderDialog.SelectedPath = Path.GetDirectoryName(baseProduct.FilePath)
 
 			If folderDialog.ShowDialog(New WindowWrapper(app.hWnd)) <> DialogResult.OK Then
 				Exit Function
@@ -17,31 +18,60 @@ Module DuplicateProductFiles
 				.Description = baseProduct.Description,
 				.Reference = baseProduct.Reference}
 
-			Dim fileName As String = Path.GetFileName(baseProduct.FilePath)
+			Dim fileName As String = SanitizeForFileName(currentProduct.Description) & " " & SanitizeForFileName(currentProduct.Reference) & Path.GetExtension(baseProduct.FilePath)
 			Dim destinationPath As String = Path.Combine(destinationFolder, fileName)
 
-			File.Copy(baseProduct.FilePath, destinationPath)
-
-			Dim dftPath As String = GetDftPath(baseProduct.FilePath)
-			If Not dftPath = "Faltando Desenho" Then
-				Dim dftFileName As String = Path.GetFileName(dftPath)
-				Dim dftDestinationPath As String = Path.Combine(destinationFolder, dftFileName)
-				File.Copy(dftPath, dftDestinationPath)
-
-				SetPropertyViaFileProperties("ExtendedSummaryInformation", "Status", "0", dftDestinationPath)
-				Dim dftDoc = TryCast(app.Documents.Open(dftDestinationPath), SolidEdgeDocument)
-			End If
+			File.Copy(baseProduct.FilePath, destinationPath, True)
 
 			currentProduct.ItemCode = Await erpRepository.DuplicateProduct(currentProduct, baseProduct)
 
-			SetPropertyViaFileProperties("ExtendedSummaryInformation", "Status", "0", destinationPath)
-			SetPropertyViaFileProperties("SummaryInformation", "Keywords", currentProduct.ItemCode, destinationPath)
+			Dim finalFileName As String = $"{currentProduct.ItemCode} - {SanitizeForFileName(currentProduct.Description)} {SanitizeForFileName(currentProduct.Reference)}{Path.GetExtension(destinationPath)}"
+			Dim finalDestinationPath As String = Path.Combine(destinationFolder, finalFileName)
+			File.Move(destinationPath, finalDestinationPath)
 
-			Dim doc = TryCast(app.Documents.Open(destinationPath), SolidEdgeDocument)
+			SetPropertyViaFileProperties("ExtendedSummaryInformation", "Status", "0", finalDestinationPath)
+			SetPropertyViaFileProperties("SummaryInformation", "Keywords", currentProduct.ItemCode, finalDestinationPath)
+
+			Dim doc = TryCast(app.Documents.Open(finalDestinationPath), SolidEdgeDocument)
+
+			Dim dftPath As String = GetDftPath(baseProduct.FilePath)
+			If dftPath <> "Faltando Desenho" Then
+				Dim dftFileName As String = $"{currentProduct.ItemCode} - {SanitizeForFileName(currentProduct.Description)} {SanitizeForFileName(currentProduct.Reference)}{Path.GetExtension(dftPath)}"
+				Dim dftDestinationPath As String = Path.Combine(destinationFolder, dftFileName)
+				File.Copy(dftPath, dftDestinationPath, True)
+
+				SetPropertyViaFileProperties("ExtendedSummaryInformation", "Status", "0", dftDestinationPath)
+				Dim dftDoc = TryCast(app.Documents.Open(dftDestinationPath), SolidEdgeDocument)
+
+				Dim modelLinks As SolidEdgeDraft.ModelLinks = dftDoc.ModelLinks
+				If modelLinks.Count > 0 Then
+					Dim link As SolidEdgeDraft.ModelLink = modelLinks.Item(1)
+					link.ChangeSource(finalDestinationPath)
+				Else
+					Throw New Exception("Nenhum link de modelo encontrado no DFT.")
+				End If
+
+				dftDoc.Save()
+			End If
 
 			MessageBox.Show(New WindowWrapper(app.hWnd), "Produto duplicado com sucesso. Novo código: " & currentProduct.ItemCode, "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information)
 		Catch ex As Exception
 			MessageBox.Show(New WindowWrapper(app.hWnd), ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error)
 		End Try
+	End Function
+
+	Private Function SanitizeForFileName(text As String) As String
+		Dim invalidChars As Char() = Path.GetInvalidFileNameChars()
+		Dim result As String = text
+
+		For Each c As Char In invalidChars
+			result = result.Replace(c, " "c)
+		Next
+
+		While result.Contains("  ")
+			result = result.Replace("  ", " ")
+		End While
+
+		Return result.Trim()
 	End Function
 End Module
