@@ -59,7 +59,7 @@ Module Revision
 			Dim PI = GetPropSet("ProjectInformation", doc)
 			Dim revisionNumber = GetPropValue(PI, "Revision")
 
-			Dim revisionNumberIncremented = Convert.ToInt32(revisionNumber) + 1
+			Dim revisionNumberIncremented = Convert.ToInt32(If(String.IsNullOrWhiteSpace(revisionNumber), 0, revisionNumber)) + 1
 
 			SetPropValue(PI, "Revision", revisionNumberIncremented.ToString())
 
