@@ -64,6 +64,14 @@ Module RegisterProduct
 		SetPropValue(SI, "Keywords", product.ItemCode)
 		SetPropValue(SI, "Title", product.Description)
 		SetPropValue(SI, "Comments", product.Reference)
+
+		Dim C = GetPropSet("Custom", doc)
+		If PropertyExists(C, "CATEGORIA") Then
+			SetPropValue(C, "CATEGORIA", product.Mark)
+		Else
+			C.Add("CATEGORIA", product.Mark)
+		End If
+
 		doc.Save()
 	End Sub
 End Module

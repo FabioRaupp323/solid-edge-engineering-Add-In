@@ -145,4 +145,13 @@ Module SolidEdgePropertyHelper
             Throw New Exception("Erro ao definir propriedades via FileProperties do documento: " & ex.Message)
         End Try
     End Sub
+    Public Function PropertyExists(propSet As SolidEdgeFramework.Properties, propertyName As String) As Boolean
+        For Each prop As SolidEdgeFramework.Property In propSet
+            If String.Equals(prop.Name, propertyName, StringComparison.OrdinalIgnoreCase) Then
+                Return True
+            End If
+        Next
+
+        Return False
+    End Function
 End Module
