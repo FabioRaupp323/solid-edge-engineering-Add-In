@@ -18,14 +18,14 @@ Module DuplicateProductFiles
 				.Description = baseProduct.Description,
 				.Reference = baseProduct.Reference}
 
-			Dim fileName As String = SanitizeForFileName(currentProduct.Description) & " " & SanitizeForFileName(currentProduct.Reference) & Path.GetExtension(baseProduct.FilePath)
+			Dim fileName As String = BuildProductFileName(currentProduct, Path.GetExtension(baseProduct.FilePath))
 			Dim destinationPath As String = Path.Combine(destinationFolder, fileName)
 
 			File.Copy(baseProduct.FilePath, destinationPath, True)
 
 			currentProduct.ItemCode = Await erpRepository.DuplicateProduct(currentProduct, baseProduct)
 
-			Dim finalFileName As String = $"{currentProduct.ItemCode} - {SanitizeForFileName(currentProduct.Description)} {SanitizeForFileName(currentProduct.Reference)}{Path.GetExtension(destinationPath)}"
+			Dim finalFileName As String = BuildProductFileName(currentProduct, Path.GetExtension(destinationPath))
 			Dim finalDestinationPath As String = Path.Combine(destinationFolder, finalFileName)
 			File.Move(destinationPath, finalDestinationPath)
 
@@ -36,7 +36,7 @@ Module DuplicateProductFiles
 
 			Dim dftPath As String = GetDftPath(baseProduct.FilePath)
 			If dftPath <> "Faltando Desenho" Then
-				Dim dftFileName As String = $"{currentProduct.ItemCode} - {SanitizeForFileName(currentProduct.Description)} {SanitizeForFileName(currentProduct.Reference)}{Path.GetExtension(dftPath)}"
+				Dim dftFileName As String = BuildProductFileName(currentProduct, Path.GetExtension(dftPath))
 				Dim dftDestinationPath As String = Path.Combine(destinationFolder, dftFileName)
 				File.Copy(dftPath, dftDestinationPath, True)
 
@@ -60,18 +60,4 @@ Module DuplicateProductFiles
 		End Try
 	End Function
 
-	Private Function SanitizeForFileName(text As String) As String
-		Dim invalidChars As Char() = Path.GetInvalidFileNameChars()
-		Dim result As String = text
-
-		For Each c As Char In invalidChars
-			result = result.Replace(c, " "c)
-		Next
-
-		While result.Contains("  ")
-			result = result.Replace("  ", " ")
-		End While
-
-		Return result.Trim()
-	End Function
 End Module

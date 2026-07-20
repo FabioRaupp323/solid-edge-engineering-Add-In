@@ -1,7 +1,5 @@
 ﻿Imports System.IO
 Imports System.Runtime.InteropServices
-Imports System.Windows.Forms
-Imports System.Windows.Interop
 Imports SolidEdgeFileProperties
 Imports SolidEdgeFramework
 
@@ -177,4 +175,32 @@ Module SolidEdgePropertyHelper
 
         Return False
     End Function
+
+    Public Function SanitizeForFileName(text As String) As String
+        Dim invalidChars As Char() = Path.GetInvalidFileNameChars()
+        Dim result As String = text
+
+        For Each c As Char In invalidChars
+            result = result.Replace(c, " "c)
+        Next
+
+        While result.Contains("  ")
+            result = result.Replace("  ", " ")
+        End While
+
+        Return result.Trim()
+    End Function
+
+    Public Function BuildProductFileName(product As ErpProduct, extension As String) As String
+        Return $"{product.ItemCode} - {SanitizeForFileName(product.Description)} {SanitizeForFileName(product.Reference)}{extension}"
+    End Function
+
+    Public Sub CloseIfOpen(app As SolidEdgeFramework.Application, path As String)
+        For Each openDoc As SolidEdgeDocument In app.Documents
+            If String.Equals(openDoc.FullName, path, StringComparison.OrdinalIgnoreCase) Then
+                openDoc.Close()
+                Exit Sub
+            End If
+        Next
+    End Sub
 End Module

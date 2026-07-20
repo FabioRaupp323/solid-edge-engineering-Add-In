@@ -1,5 +1,7 @@
-﻿Imports System.Windows.Forms
+﻿Imports System.IO
+Imports System.Windows.Forms
 Imports SolidEdgeFramework
+Imports SolidEdgeDraft
 
 Module RegisterProduct
 
@@ -42,6 +44,7 @@ Module RegisterProduct
 			End If
 
 			UpdateSEDocumentProperties(doc, currentProduct)
+			doc = RenameDocumentFile(app, doc, currentProduct)
 
 		Catch ex As Exception
 			MessageBox.Show(New WindowWrapper(app.hWnd), ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -80,4 +83,37 @@ Module RegisterProduct
 
 		doc.Save()
 	End Sub
+
+	Private Function RenameDocumentFile(app As SolidEdgeFramework.Application, doc As SolidEdgeDocument, product As ErpProduct) As SolidEdgeDocument
+		Dim currentPath As String = product.FilePath
+		Dim folder As String = Path.GetDirectoryName(currentPath)
+		Dim newPath As String = Path.Combine(folder, BuildProductFileName(product, Path.GetExtension(currentPath)))
+
+		Dim renamedDoc As SolidEdgeDocument = doc
+
+		If Not String.Equals(currentPath, newPath, StringComparison.OrdinalIgnoreCase) Then
+			doc.Close()
+			File.Move(currentPath, newPath)
+			renamedDoc = TryCast(app.Documents.Open(newPath), SolidEdgeDocument)
+		End If
+
+		Dim dftPath As String = GetDftPath(currentPath)
+		If dftPath <> "Faltando Desenho" Then
+			Dim newDftPath As String = Path.Combine(folder, BuildProductFileName(product, Path.GetExtension(dftPath)))
+
+			If Not String.Equals(dftPath, newDftPath, StringComparison.OrdinalIgnoreCase) Then
+				CloseIfOpen(app, dftPath)
+				File.Move(dftPath, newDftPath)
+
+				Dim renamedDft = TryCast(app.Documents.Open(newDftPath), SolidEdgeDocument)
+				Dim modelLinks As SolidEdgeDraft.ModelLinks = renamedDft.ModelLinks
+				If modelLinks.Count > 0 Then
+					modelLinks.Item(1).ChangeSource(newPath)
+					renamedDft.Save()
+				End If
+			End If
+		End If
+
+		Return renamedDoc
+	End Function
 End Module

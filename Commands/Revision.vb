@@ -67,13 +67,4 @@ Module Revision
 			Throw New Exception("Erro ao incrementar número da revisão: " & ex.Message)
 		End Try
 	End Sub
-
-	Private Sub CloseIfOpen(app As SolidEdgeFramework.Application, path As String)
-		For Each openDoc As SolidEdgeDocument In app.Documents
-			If String.Equals(openDoc.FullName, path, StringComparison.OrdinalIgnoreCase) Then
-				openDoc.Close()
-				Exit Sub
-			End If
-		Next
-	End Sub
 End Module
