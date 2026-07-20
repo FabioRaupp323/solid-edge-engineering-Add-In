@@ -8,6 +8,10 @@ Module Release
 			Dim doc = TryCast(app.ActiveDocument, SolidEdgeDocument)
 
 			Dim ESI = GetPropSet("ExtendedSummaryInformation", doc)
+			If GetPropValue(ESI, "Status") = "3" Then
+				MessageBox.Show(New WindowWrapper(app.hWnd), $"O documento {doc.Name} já está liberado.", "Documento liberado", MessageBoxButtons.OK, MessageBoxIcon.Information)
+				Exit Sub
+			End If
 			SetPropValue(ESI, "Status", "3")
 
 			doc.Save()
@@ -26,7 +30,10 @@ Module Release
 				Dim doc3D = TryCast(app.Documents.Open(model3D.FullName), SolidEdgeDocument)
 
 				Dim ESI3D = GetPropSet("ExtendedSummaryInformation", doc3D)
-
+				If GetPropValue(ESI3D, "Status") = "3" Then
+					MessageBox.Show(New WindowWrapper(app.hWnd), $"O documento {doc3D.Name} já está liberado.", "Documento liberado", MessageBoxButtons.OK, MessageBoxIcon.Information)
+					Exit Sub
+				End If
 				SetPropValue(ESI3D, "Status", "3")
 
 				doc3D.Save()
@@ -38,7 +45,10 @@ Module Release
 					Dim docDft = TryCast(app.Documents.Open(dftPath), SolidEdgeDocument)
 
 					Dim ESIDft = GetPropSet("ExtendedSummaryInformation", docDft)
-
+					If GetPropValue(ESIDft, "Status") = "3" Then
+						MessageBox.Show(New WindowWrapper(app.hWnd), $"O documento {docDft.Name} já está liberado.", "Documento liberado", MessageBoxButtons.OK, MessageBoxIcon.Information)
+						Exit Sub
+					End If
 					SetPropValue(ESIDft, "Status", "3")
 
 					docDft.Save()
