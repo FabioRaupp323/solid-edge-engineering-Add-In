@@ -4,8 +4,12 @@ Imports SolidEdgeFramework
 Module RegisterProduct
 
 	Public Async Sub RegisterProduct(app As SolidEdgeFramework.Application)
+		Dim wasFromSelection As Boolean = False
+		Dim doc As SolidEdgeDocument = Nothing
+
 		Try
-			Dim currentProduct As ErpProduct = GetCurrentProduct(app)
+			doc = GetTargetDocument(app, wasFromSelection)
+			Dim currentProduct As ErpProduct = GetCurrentProduct(doc)
 
 			Dim erpRepository As New ErpRepository(AppSettings.ErpConnectionString)
 
@@ -14,7 +18,7 @@ Module RegisterProduct
 				currentProduct.ItemCode = ""
 			End If
 
-			Await erpRepository.GetProductDetails(currentProduct)
+			If Not String.IsNullOrWhiteSpace(currentProduct.ItemCode) Then Await erpRepository.GetProductDetails(currentProduct)
 
 			Dim registerProductForm As New RegisterProductForm(erpRepository, currentProduct)
 			registerProductForm.ShowDialog()
@@ -37,16 +41,20 @@ Module RegisterProduct
 				MessageBox.Show(New WindowWrapper(app.hWnd), "As informações do produto foram atualizadas com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information)
 			End If
 
-			UpdateSEDocumentProperties(app, currentProduct)
+			UpdateSEDocumentProperties(doc, currentProduct)
 
 		Catch ex As Exception
 			MessageBox.Show(New WindowWrapper(app.hWnd), ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error)
+
+		Finally
+			If wasFromSelection Then
+				doc.Close()
+			End If
 		End Try
 
 	End Sub
 
-	Private Function GetCurrentProduct(app As SolidEdgeFramework.Application) As ErpProduct
-		Dim doc = TryCast(app.ActiveDocument, SolidEdgeDocument)
+	Private Function GetCurrentProduct(doc As SolidEdgeDocument) As ErpProduct
 		Dim product As New ErpProduct With {.FilePath = doc.FullName}
 
 		Dim SI = GetPropSet("SummaryInformation", doc)
@@ -57,9 +65,7 @@ Module RegisterProduct
 		Return product
 	End Function
 
-	Private Sub UpdateSEDocumentProperties(app As SolidEdgeFramework.Application, product As ErpProduct)
-		Dim doc = TryCast(app.ActiveDocument, SolidEdgeDocument)
-
+	Private Sub UpdateSEDocumentProperties(doc As SolidEdgeDocument, product As ErpProduct)
 		Dim SI = GetPropSet("SummaryInformation", doc)
 		SetPropValue(SI, "Keywords", product.ItemCode)
 		SetPropValue(SI, "Title", product.Description)

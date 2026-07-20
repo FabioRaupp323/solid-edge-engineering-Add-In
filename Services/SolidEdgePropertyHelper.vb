@@ -145,6 +145,29 @@ Module SolidEdgePropertyHelper
             Throw New Exception("Erro ao definir propriedades via FileProperties do documento: " & ex.Message)
         End Try
     End Sub
+
+    Public Function GetTargetDocument(app As SolidEdgeFramework.Application, ByRef wasFromSelection As Boolean) As SolidEdgeDocument
+        wasFromSelection = False
+        Dim selectSet As SolidEdgeFramework.SelectSet = app.ActiveDocument.SelectSet
+
+        Try
+            If selectSet IsNot Nothing AndAlso selectSet.Count = 1 Then
+                Dim occ = TryCast(selectSet.Item(1), SolidEdgeAssembly.Occurrence)
+                If occ IsNot Nothing Then
+                    wasFromSelection = True
+                    Return TryCast(occ.OccurrenceDocument, SolidEdgeDocument)
+                End If
+            End If
+
+            Return TryCast(app.ActiveDocument, SolidEdgeDocument)
+        Finally
+            If selectSet IsNot Nothing Then
+                Marshal.ReleaseComObject(selectSet)
+                selectSet = Nothing
+            End If
+        End Try
+    End Function
+
     Public Function PropertyExists(propSet As SolidEdgeFramework.Properties, propertyName As String) As Boolean
         For Each prop As SolidEdgeFramework.Property In propSet
             If String.Equals(prop.Name, propertyName, StringComparison.OrdinalIgnoreCase) Then
