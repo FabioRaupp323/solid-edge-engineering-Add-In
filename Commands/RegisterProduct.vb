@@ -11,6 +11,13 @@ Module RegisterProduct
 
 		Try
 			doc = GetTargetDocument(app, wasFromSelection)
+
+			Dim ESI = GetPropSet("ExtendedSummaryInformation", doc)
+			If GetPropValue(ESI, "Status") = "3" Then
+				MessageBox.Show(New WindowWrapper(app.hWnd), $"O documento {doc.Name} já está liberado.", "Documento liberado", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+				Exit Sub
+			End If
+
 			Dim currentProduct As ErpProduct = GetCurrentProduct(doc)
 
 			Dim erpRepository As New ErpRepository(AppSettings.ErpConnectionString)
