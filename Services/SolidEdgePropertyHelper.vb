@@ -144,15 +144,15 @@ Module SolidEdgePropertyHelper
         End Try
     End Sub
 
-    Public Function GetTargetDocument(app As SolidEdgeFramework.Application, ByRef wasFromSelection As Boolean) As SolidEdgeDocument
-        wasFromSelection = False
+    Public Function GetTargetDocument(app As SolidEdgeFramework.Application, ByRef selectedOccurrance As SolidEdgeAssembly.Occurrence) As SolidEdgeDocument
+        selectedOccurrance = Nothing
         Dim selectSet As SolidEdgeFramework.SelectSet = app.ActiveDocument.SelectSet
 
         Try
             If selectSet IsNot Nothing AndAlso selectSet.Count = 1 Then
                 Dim occ = TryCast(selectSet.Item(1), SolidEdgeAssembly.Occurrence)
                 If occ IsNot Nothing Then
-                    wasFromSelection = True
+                    selectedOccurrance = occ
                     Return TryCast(occ.OccurrenceDocument, SolidEdgeDocument)
                 End If
             End If
