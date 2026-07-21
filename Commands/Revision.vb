@@ -61,7 +61,7 @@ Module Revision
 
 			Dim revisionNumberIncremented = Convert.ToInt32(If(String.IsNullOrWhiteSpace(revisionNumber), 0, revisionNumber)) + 1
 
-			SetPropValue(PI, "Revision", revisionNumberIncremented.ToString())
+			SetPropValue(PI, "Revision", revisionNumberIncremented.ToString("00"))
 
 		Catch ex As Exception
 			Throw New Exception("Erro ao incrementar número da revisão: " & ex.Message)
