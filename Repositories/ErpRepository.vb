@@ -290,4 +290,20 @@ Public Class ErpRepository
 			Return Await cmd.ExecuteScalarAsync() IsNot Nothing
 		End Using
 	End Function
+
+	Public Async Function DescriptionExists(description As String, excludingItemCode As String) As Task(Of Boolean)
+		Using conn As New SqlConnection(_connectionString)
+			Await conn.OpenAsync()
+
+			Dim cmd As New SqlCommand("
+				SELECT 1 FROM Produto
+				WHERE proDescricao = @description
+				AND proCodigo <> @excludingItemCode", conn)
+
+			cmd.Parameters.AddWithValue("@description", description)
+			cmd.Parameters.AddWithValue("@excludingItemCode", excludingItemCode)
+
+			Return Await cmd.ExecuteScalarAsync() IsNot Nothing
+		End Using
+	End Function
 End Class

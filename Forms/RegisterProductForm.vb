@@ -129,6 +129,13 @@ Public Class RegisterProductForm
 			Exit Sub
 		End If
 
+		If Await _erpRepository.DescriptionExists(txtDescription.Text.Trim.ToUpper, txtItemCode.Text.Trim) Then
+			Dim result As DialogResult = MessageBox.Show(Me, "Já existe um produto com essa descrição. Deseja continuar mesmo assim?", "Descrição duplicada", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+			If result = DialogResult.No Then
+				Exit Sub
+			End If
+		End If
+
 		If txtReference.Text.Length > 30 Then
 			MessageBox.Show(Me, "O campo 'Referência' não pode ter mais de 30 caracteres", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
 			Exit Sub
