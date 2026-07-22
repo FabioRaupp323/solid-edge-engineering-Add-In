@@ -118,40 +118,55 @@ Public Class RegisterProductForm
 	End Sub
 
 	Private Async Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
+		If Not Await ValidateFields(True) Then
+			Exit Sub
+		End If
 
+		_selectedBaseProduct = cmbBaseProduct.SelectedItem
+		Me.DialogResult = DialogResult.OK
+	End Sub
+
+	Private Async Sub btnDuplicate_Click(sender As Object, e As EventArgs) Handles btnDuplicate.Click
+		If Not Await ValidateFields(False) Then
+			Exit Sub
+		End If
+
+		Me.DialogResult = DialogResult.Yes
+	End Sub
+
+	Private Async Function ValidateFields(requireBaseProduct As Boolean) As Task(Of Boolean)
 		If String.IsNullOrWhiteSpace(txtDescription.Text) Then
 			MessageBox.Show(Me, "O campo 'Descrição' não pode ser vazio", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-			Exit Sub
+			Return False
 		End If
 
 		If txtDescription.Text.Length > 120 Then
 			MessageBox.Show(Me, "O campo 'Descrição' não pode ter mais de 120 caracteres", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-			Exit Sub
+			Return False
 		End If
 
 		If Await _erpRepository.DescriptionExists(txtDescription.Text.Trim.ToUpper, txtItemCode.Text.Trim) Then
 			Dim result As DialogResult = MessageBox.Show(Me, "Já existe um produto com essa descrição. Deseja continuar mesmo assim?", "Descrição duplicada", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
 			If result = DialogResult.No Then
-				Exit Sub
+				Return False
 			End If
 		End If
 
 		If txtReference.Text.Length > 30 Then
 			MessageBox.Show(Me, "O campo 'Referência' não pode ter mais de 30 caracteres", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-			Exit Sub
+			Return False
 		End If
 
-		If String.IsNullOrWhiteSpace(txtItemCode.Text) Then
+		If requireBaseProduct AndAlso String.IsNullOrWhiteSpace(txtItemCode.Text) Then
 			If cmbBaseProduct.SelectedItem Is Nothing Then
 				MessageBox.Show(Me, "Selecione um produto base para o cadastro.", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-				Exit Sub
-
+				Return False
 			End If
 		End If
 
 		If Not Await _erpRepository.SubgroupExists(cmbSubgroup.Text.Trim) Then
 			MessageBox.Show(Me, "Selecione um subgrupo válido.", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-			Exit Sub
+			Return False
 		End If
 
 		_currentProduct.Description = txtDescription.Text.Trim.ToUpper
@@ -160,13 +175,8 @@ Public Class RegisterProductForm
 		_currentProduct.Mark = cmbMark.SelectedItem.ToString().Trim
 		_currentProduct.Subgroup = cmbSubgroup.Text.Trim
 
-		_selectedBaseProduct = cmbBaseProduct.SelectedItem
-		Me.DialogResult = DialogResult.OK
-	End Sub
-
-	Private Sub btnDuplicate_Click(sender As Object, e As EventArgs) Handles btnDuplicate.Click
-		Me.DialogResult = DialogResult.Yes
-	End Sub
+		Return True
+	End Function
 
 	Private Sub cmbBaseProduct_MeasureItem(sender As Object, e As MeasureItemEventArgs) Handles cmbBaseProduct.MeasureItem
 		If e.Index < 0 Then Return
