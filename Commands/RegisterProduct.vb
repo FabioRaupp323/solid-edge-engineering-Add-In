@@ -6,11 +6,11 @@ Imports SolidEdgeDraft
 Module RegisterProduct
 
 	Public Async Sub RegisterProduct(app As SolidEdgeFramework.Application)
-		Dim selectedOccurrance As SolidEdgeAssembly.Occurrence = Nothing
+		Dim selectedOccurrence As SolidEdgeAssembly.Occurrence = Nothing
 		Dim doc As SolidEdgeDocument = Nothing
 
 		Try
-			doc = GetTargetDocument(app, selectedOccurrance)
+			doc = GetTargetDocument(app, selectedOccurrence)
 
 			Dim ESI = GetPropSet("ExtendedSummaryInformation", doc)
 			If GetPropValue(ESI, "Status") = "3" Then
@@ -51,13 +51,13 @@ Module RegisterProduct
 			End If
 
 			UpdateSEDocumentProperties(doc, currentProduct)
-			doc = RenameDocumentFile(app, doc, currentProduct, selectedOccurrance)
+			doc = RenameDocumentFile(app, doc, currentProduct, selectedOccurrence)
 
 		Catch ex As Exception
 			MessageBox.Show(New WindowWrapper(app.hWnd), ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error)
 
 		Finally
-			If selectedOccurrance IsNot Nothing Then
+			If selectedOccurrence IsNot Nothing Then
 				doc.Close()
 			End If
 		End Try

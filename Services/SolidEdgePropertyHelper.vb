@@ -144,15 +144,15 @@ Module SolidEdgePropertyHelper
         End Try
     End Sub
 
-    Public Function GetTargetDocument(app As SolidEdgeFramework.Application, ByRef selectedOccurrance As SolidEdgeAssembly.Occurrence) As SolidEdgeDocument
-        selectedOccurrance = Nothing
+    Public Function GetTargetDocument(app As SolidEdgeFramework.Application, ByRef selectedOccurrence As SolidEdgeAssembly.Occurrence) As SolidEdgeDocument
+        selectedOccurrence = Nothing
         Dim selectSet As SolidEdgeFramework.SelectSet = app.ActiveDocument.SelectSet
 
         Try
             If selectSet IsNot Nothing AndAlso selectSet.Count = 1 Then
                 Dim occ = TryCast(selectSet.Item(1), SolidEdgeAssembly.Occurrence)
                 If occ IsNot Nothing Then
-                    selectedOccurrance = occ
+                    selectedOccurrence = occ
                     Return TryCast(occ.OccurrenceDocument, SolidEdgeDocument)
                 End If
             End If
@@ -192,7 +192,7 @@ Module SolidEdgePropertyHelper
     End Function
 
     Public Function BuildProductFileName(product As ErpProduct, extension As String) As String
-        Return $"{product.ItemCode} - {SanitizeForFileName(product.Description)} {SanitizeForFileName(product.Reference)}{extension}"
+        Return $"{SanitizeForFileName(product.Description)} {SanitizeForFileName(product.Reference)} - {product.ItemCode}{extension}"
     End Function
 
     Public Sub CloseIfOpen(app As SolidEdgeFramework.Application, path As String)

@@ -156,8 +156,8 @@ Public Class ErpRepository
 					cmdDuplicateProduct.Parameters.AddWithValue("@nextCodeFormated", nextCodeFormated)
 					cmdDuplicateProduct.Parameters.AddWithValue("@currentDescription", currentProduct.Description)
 					cmdDuplicateProduct.Parameters.AddWithValue("@currentReference", If(String.IsNullOrWhiteSpace(currentProduct.Reference), DBNull.Value, currentProduct.Reference))
-					cmdDuplicateProduct.Parameters.AddWithValue("@currentMark", baseProduct.Mark)
-					cmdDuplicateProduct.Parameters.AddWithValue("@currentSubgroup", baseProduct.Subgroup)
+					cmdDuplicateProduct.Parameters.AddWithValue("@currentMark", currentProduct.Mark)
+					cmdDuplicateProduct.Parameters.AddWithValue("@currentSubgroup", currentProduct.Subgroup)
 					cmdDuplicateProduct.Parameters.AddWithValue("@baseCode", baseProduct.ItemCode)
 
 					Dim rowsAffected = Await cmdDuplicateProduct.ExecuteNonQueryAsync()

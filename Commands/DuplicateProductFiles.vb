@@ -16,7 +16,9 @@ Module DuplicateProductFiles
 
 			Dim currentProduct As New ErpProduct With {
 				.Description = baseProduct.Description,
-				.Reference = baseProduct.Reference}
+				.Reference = baseProduct.Reference,
+				.Mark = baseProduct.Mark,
+				.Subgroup = baseProduct.Subgroup}
 
 			Dim fileName As String = BuildProductFileName(currentProduct, Path.GetExtension(baseProduct.FilePath))
 			Dim destinationPath As String = Path.Combine(destinationFolder, fileName)
@@ -31,8 +33,18 @@ Module DuplicateProductFiles
 
 			SetPropertyViaFileProperties("ExtendedSummaryInformation", "Status", "0", finalDestinationPath)
 			SetPropertyViaFileProperties("SummaryInformation", "Keywords", currentProduct.ItemCode, finalDestinationPath)
+			SetPropertyViaFileProperties("SummaryInformation", "Title", currentProduct.Description, finalDestinationPath)
+			SetPropertyViaFileProperties("SummaryInformation", "Comments", currentProduct.Reference, finalDestinationPath)
 
 			Dim doc = TryCast(app.Documents.Open(finalDestinationPath), SolidEdgeDocument)
+
+			Dim C = GetPropSet("Custom", doc)
+			If PropertyExists(C, "CATEGORIA") Then
+				SetPropValue(C, "CATEGORIA", currentProduct.Mark)
+			Else
+				C.Add("CATEGORIA", currentProduct.Mark)
+			End If
+			doc.Save()
 
 			Dim dftPath As String = GetDftPath(baseProduct.FilePath)
 			If dftPath <> "Faltando Desenho" Then
